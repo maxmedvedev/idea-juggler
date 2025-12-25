@@ -71,6 +71,11 @@ object DirectoryCopier {
                 file: Path,
                 attrs: BasicFileAttributes
             ): FileVisitResult {
+                // Skip .lock files to avoid conflicts with running IntelliJ instances
+                if (file.fileName.toString() == ".lock") {
+                    return FileVisitResult.CONTINUE
+                }
+
                 val targetFile = destination.resolve(source.relativize(file))
                 Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING)
                 return FileVisitResult.CONTINUE
