@@ -21,11 +21,10 @@ class ConfigCommand : CliktCommand(
 
     override fun run() {
         val configRepository = ConfigRepository.create()
-        val baseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
 
         when {
             show -> showConfig(configRepository)
-            intellijPath != null || baseVmOptionsPath != null -> updateConfig(configRepository, baseVMOptionsTracker)
+            intellijPath != null || baseVmOptionsPath != null -> updateConfig(configRepository)
             else -> showConfig(configRepository)
         }
     }
@@ -42,7 +41,7 @@ class ConfigCommand : CliktCommand(
         echo("Configuration file: ${Paths.get(System.getProperty("user.home"), ".idea-juggler", "config.json")}")
     }
 
-    private fun updateConfig(configRepository: ConfigRepository, baseVMOptionsTracker: BaseVMOptionsTracker) {
+    private fun updateConfig(configRepository: ConfigRepository) {
         // Validate paths before updating
         intellijPath?.let { path ->
             if (!path.exists()) {
@@ -72,7 +71,7 @@ class ConfigCommand : CliktCommand(
                 echo("Base VM options path updated: $path")
 
                 // Calculate and store initial hash
-                baseVMOptionsTracker.updateHash()
+                BaseVMOptionsTracker.getInstance(configRepository).updateHash()
                 echo("Base VM options hash calculated and stored")
             }
 

@@ -6,7 +6,6 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.core.ProjectManager
 import com.ideajuggler.util.TimeUtils
-import java.nio.file.Paths
 
 class ListCommand : CliktCommand(
     name = "list",
@@ -16,9 +15,8 @@ class ListCommand : CliktCommand(
 
     override fun run() {
         val configRepository = ConfigRepository.create()
-        val projectManager = ProjectManager.getInstance(configRepository)
 
-        val projects = projectManager.listAll()
+        val projects = ProjectManager.getInstance(configRepository).listAll()
 
         if (projects.isEmpty()) {
             echo("No projects tracked yet.")

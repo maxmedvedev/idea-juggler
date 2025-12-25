@@ -20,9 +20,9 @@ class RecentCommand : CliktCommand(
         .default(10)
 
     override fun run() {
-        val recentProjectsIndex = RecentProjectsIndex.getInstance(ConfigRepository.create())
+        val configRepository = ConfigRepository.create()
 
-        val recentProjects = recentProjectsIndex.getRecent(limit)
+        val recentProjects = RecentProjectsIndex.getInstance(configRepository).getRecent(limit)
 
         if (recentProjects.isEmpty()) {
             echo("No recent projects.")

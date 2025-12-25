@@ -23,8 +23,6 @@ class CleanCommand : CliktCommand(
     override fun run() {
         val configRepository = ConfigRepository.create()
         val projectManager = ProjectManager.getInstance(configRepository)
-        val directoryManager = DirectoryManager.getInstance(configRepository)
-        val recentProjectsIndex = RecentProjectsIndex.getInstance(configRepository)
 
         // Resolve project ID from identifier (could be ID or path)
         val projectId = resolveProjectId(projectIdentifier, projectManager)
@@ -50,13 +48,13 @@ class CleanCommand : CliktCommand(
         }
 
         // Clean project directories
-        directoryManager.cleanProject(projectId)
+        DirectoryManager.getInstance(configRepository).cleanProject(projectId)
 
         // Remove from metadata
         projectManager.remove(projectId)
 
         // Remove from recent list
-        recentProjectsIndex.remove(projectId)
+        RecentProjectsIndex.getInstance(configRepository).remove(projectId)
 
         echo("Successfully cleaned project: ${project.name}")
     }
