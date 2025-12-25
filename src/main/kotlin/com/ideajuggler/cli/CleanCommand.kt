@@ -23,13 +23,12 @@ class CleanCommand : CliktCommand(
     override fun run() {
         val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
         val configRepository = ConfigRepository(baseDir)
-        val projectIdGenerator = ProjectIdGenerator()
-        val projectManager = ProjectManager(configRepository, projectIdGenerator)
+        val projectManager = ProjectManager(configRepository)
         val directoryManager = DirectoryManager(baseDir)
         val recentProjectsIndex = RecentProjectsIndex(baseDir)
 
         // Resolve project ID from identifier (could be ID or path)
-        val projectId = resolveProjectId(projectIdentifier, projectIdGenerator, projectManager)
+        val projectId = resolveProjectId(projectIdentifier, projectManager)
         val project = projectManager.get(projectId)
 
         if (project == null) {
@@ -65,7 +64,6 @@ class CleanCommand : CliktCommand(
 
     private fun resolveProjectId(
         identifier: String,
-        projectIdGenerator: ProjectIdGenerator,
         projectManager: ProjectManager
     ): String {
         // First, try as project ID
@@ -76,7 +74,7 @@ class CleanCommand : CliktCommand(
         // Otherwise, try as path
         val path = Paths.get(identifier)
         if (path.exists()) {
-            return projectIdGenerator.generate(path)
+            return ProjectIdGenerator.generate(path)
         }
 
         // If neither works, return the identifier as-is (will fail with not found)

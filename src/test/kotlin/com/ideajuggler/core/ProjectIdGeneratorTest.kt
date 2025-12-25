@@ -9,13 +9,11 @@ import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
 
 class ProjectIdGeneratorTest : StringSpec({
-    val generator = ProjectIdGenerator()
-
     "should generate consistent IDs for the same path" {
         val tempDir = createTempDirectory("test-project")
         try {
-            val id1 = generator.generate(tempDir)
-            val id2 = generator.generate(tempDir)
+            val id1 = ProjectIdGenerator.generate(tempDir)
+            val id2 = ProjectIdGenerator.generate(tempDir)
 
             id1 shouldBe id2
         } finally {
@@ -26,7 +24,7 @@ class ProjectIdGeneratorTest : StringSpec({
     "should generate 16-character IDs" {
         val tempDir = createTempDirectory("test-project")
         try {
-            val id = generator.generate(tempDir)
+            val id = ProjectIdGenerator.generate(tempDir)
             id shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
@@ -38,8 +36,8 @@ class ProjectIdGeneratorTest : StringSpec({
         val tempDir2 = createTempDirectory("test-project-2")
 
         try {
-            val id1 = generator.generate(tempDir1)
-            val id2 = generator.generate(tempDir2)
+            val id1 = ProjectIdGenerator.generate(tempDir1)
+            val id2 = ProjectIdGenerator.generate(tempDir2)
 
             id1 shouldNotBe id2
         } finally {
@@ -52,7 +50,7 @@ class ProjectIdGeneratorTest : StringSpec({
         val tempDir = createTempDirectory("test-project")
         try {
             val absolutePath = tempDir.toAbsolutePath()
-            val id = generator.generate(absolutePath)
+            val id = ProjectIdGenerator.generate(absolutePath)
 
             id shouldHaveLength 16
         } finally {
@@ -67,10 +65,10 @@ class ProjectIdGeneratorTest : StringSpec({
             val subDir = tempDir.resolve("subdir")
             Files.createDirectory(subDir)
 
-            val absoluteId = generator.generate(subDir.toAbsolutePath())
+            val absoluteId = ProjectIdGenerator.generate(subDir.toAbsolutePath())
 
             // Change to parent directory and use relative path
-            val relativeId = generator.generate(tempDir.resolve("subdir"))
+            val relativeId = ProjectIdGenerator.generate(tempDir.resolve("subdir"))
 
             absoluteId shouldBe relativeId
         } finally {
@@ -81,7 +79,7 @@ class ProjectIdGeneratorTest : StringSpec({
     "should handle paths with spaces" {
         val tempDir = createTempDirectory("test project with spaces")
         try {
-            val id = generator.generate(tempDir)
+            val id = ProjectIdGenerator.generate(tempDir)
             id shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
@@ -91,7 +89,7 @@ class ProjectIdGeneratorTest : StringSpec({
     "should handle paths with special characters" {
         val tempDir = createTempDirectory("test-project_@#$")
         try {
-            val id = generator.generate(tempDir)
+            val id = ProjectIdGenerator.generate(tempDir)
             id shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
@@ -100,7 +98,7 @@ class ProjectIdGeneratorTest : StringSpec({
 
     "should generate ID for non-existent path" {
         val nonExistentPath = Path.of("/tmp/non-existent-path-12345")
-        val id = generator.generate(nonExistentPath)
+        val id = ProjectIdGenerator.generate(nonExistentPath)
 
         id shouldHaveLength 16
     }

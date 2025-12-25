@@ -27,8 +27,7 @@ class IntegrationTest : StringSpec({
 
             // Initialize all components
             val configRepository = ConfigRepository(baseDir)
-            val projectIdGenerator = ProjectIdGenerator()
-            val projectManager = ProjectManager(configRepository, projectIdGenerator)
+            val projectManager = ProjectManager(configRepository)
             val directoryManager = DirectoryManager(baseDir)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
             val vmOptionsGenerator = VMOptionsGenerator()
@@ -47,7 +46,7 @@ class IntegrationTest : StringSpec({
             config.baseVmOptionsHash shouldNotBe null
 
             // Step 2: Open a project (simulate)
-            val projectId = projectIdGenerator.generate(projectDir)
+            val projectId = ProjectIdGenerator.generate(projectDir)
             projectManager.registerOrUpdate(projectId, projectDir)
 
             val projectDirs = directoryManager.ensureProjectDirectories(projectId)
@@ -119,8 +118,7 @@ class IntegrationTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(baseDir)
-            val projectIdGenerator = ProjectIdGenerator()
-            val projectManager = ProjectManager(configRepository, projectIdGenerator)
+            val projectManager = ProjectManager(configRepository)
             val directoryManager = DirectoryManager(baseDir)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
             val vmOptionsGenerator = VMOptionsGenerator()
@@ -129,8 +127,8 @@ class IntegrationTest : StringSpec({
             configRepository.save(GlobalConfig(baseVmOptionsPath = baseVmOptions.toString()))
             baseVMOptionsTracker.updateHash()
 
-            val projectId1 = projectIdGenerator.generate(projectDir1)
-            val projectId2 = projectIdGenerator.generate(projectDir2)
+            val projectId1 = ProjectIdGenerator.generate(projectDir1)
+            val projectId2 = ProjectIdGenerator.generate(projectDir2)
 
             val dirs1 = directoryManager.ensureProjectDirectories(projectId1)
             val dirs2 = directoryManager.ensureProjectDirectories(projectId2)
@@ -200,14 +198,13 @@ class IntegrationTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(baseDir)
-            val projectIdGenerator = ProjectIdGenerator()
-            val projectManager = ProjectManager(configRepository, projectIdGenerator)
+            val projectManager = ProjectManager(configRepository)
             val directoryManager = DirectoryManager(baseDir)
 
             // Create three projects
-            val id1 = projectIdGenerator.generate(projectDir1)
-            val id2 = projectIdGenerator.generate(projectDir2)
-            val id3 = projectIdGenerator.generate(projectDir3)
+            val id1 = ProjectIdGenerator.generate(projectDir1)
+            val id2 = ProjectIdGenerator.generate(projectDir2)
+            val id3 = ProjectIdGenerator.generate(projectDir3)
 
             projectManager.registerOrUpdate(id1, projectDir1)
             projectManager.registerOrUpdate(id2, projectDir2)

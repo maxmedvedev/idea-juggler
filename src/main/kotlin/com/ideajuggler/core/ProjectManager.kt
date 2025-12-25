@@ -7,7 +7,6 @@ import java.time.Instant
 
 class ProjectManager(
     private val configRepository: ConfigRepository,
-    private val projectIdGenerator: ProjectIdGenerator
 ) {
 
     fun registerOrUpdate(projectId: String, projectPath: Path): ProjectMetadata {
@@ -38,7 +37,7 @@ class ProjectManager(
     }
 
     fun findByPath(projectPath: Path): ProjectMetadata? {
-        val projectId = projectIdGenerator.generate(projectPath)
+        val projectId = ProjectIdGenerator.generate(projectPath)
         return configRepository.loadProjectMetadata(projectId)
     }
 }

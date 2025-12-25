@@ -11,8 +11,7 @@ class ProjectLauncher(
     private val baseDir: Path
 ) {
     private val configRepository = ConfigRepository(baseDir)
-    private val projectIdGenerator = ProjectIdGenerator()
-    private val projectManager = ProjectManager(configRepository, projectIdGenerator)
+    private val projectManager = ProjectManager(configRepository)
     private val directoryManager = DirectoryManager(baseDir)
     private val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
     private val vmOptionsGenerator = VMOptionsGenerator()
@@ -32,7 +31,7 @@ class ProjectLauncher(
      * Launch a project by path, handling base VM options changes and project registration
      */
     fun launchByPath(projectPath: Path, onBaseVmOptionsChanged: () -> Unit = {}) {
-        val projectId = projectIdGenerator.generate(projectPath)
+        val projectId = ProjectIdGenerator.generate(projectPath)
 
         // Check if base VM options changed
         if (baseVMOptionsTracker.hasChanged()) {

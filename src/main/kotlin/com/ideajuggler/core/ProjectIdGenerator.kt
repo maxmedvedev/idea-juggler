@@ -4,7 +4,7 @@ import com.ideajuggler.util.HashUtils
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 
-class ProjectIdGenerator {
+object ProjectIdGenerator {
     fun generate(projectPath: Path): String {
         // Resolve to canonical path to handle symlinks, relative paths, etc.
         val canonicalPath = try {
