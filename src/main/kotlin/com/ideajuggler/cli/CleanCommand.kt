@@ -1,6 +1,7 @@
 package com.ideajuggler.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.ProgramResult
 import com.github.ajalt.clikt.core.terminal
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
@@ -10,7 +11,8 @@ import com.ideajuggler.config.RecentProjectsIndex
 import com.ideajuggler.core.DirectoryManager
 import com.ideajuggler.core.ProjectIdGenerator
 import com.ideajuggler.core.ProjectManager
-import java.nio.file.Paths
+import com.ideajuggler.util.PathUtils
+import java.nio.file.Path
 import kotlin.io.path.exists
 
 class CleanCommand : CliktCommand(
@@ -30,7 +32,7 @@ class CleanCommand : CliktCommand(
 
         if (project == null) {
             echo("Project not found: $projectIdentifier", err = true)
-            return
+            throw ProgramResult(1)
         }
 
         // Confirm deletion
@@ -68,8 +70,8 @@ class CleanCommand : CliktCommand(
             return identifier
         }
 
-        // Otherwise, try as path
-        val path = Paths.get(identifier)
+        // Otherwise, try as path (with tilde expansion)
+        val path = PathUtils.expandTilde(Path.of(identifier))
         if (path.exists()) {
             return ProjectIdGenerator.generate(path)
         }
