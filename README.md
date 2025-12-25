@@ -386,6 +386,7 @@ src/main/kotlin/com/ideajuggler/
 ├── core/                                # Core logic
 │   ├── ProjectManager.kt
 │   ├── ProjectIdGenerator.kt
+│   ├── ProjectLauncher.kt
 │   ├── IntelliJLauncher.kt
 │   ├── DirectoryManager.kt
 │   ├── VMOptionsGenerator.kt

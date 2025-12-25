@@ -4,11 +4,8 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.config.RecentProjectsIndex
-import com.ideajuggler.core.*
-import com.ideajuggler.platform.IntelliJLocator
-import com.ideajuggler.platform.ProcessLauncher
+import com.ideajuggler.core.ProjectLauncher
 import com.ideajuggler.util.TimeUtils
 import java.nio.file.Paths
 
@@ -22,7 +19,6 @@ class RecentCommand : CliktCommand(
 
     override fun run() {
         val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
-        val configRepository = ConfigRepository(baseDir)
         val recentProjectsIndex = RecentProjectsIndex(baseDir)
 
         val recentProjects = recentProjectsIndex.getRecent(limit)
@@ -62,33 +58,8 @@ class RecentCommand : CliktCommand(
 
         // Launch the selected project
         echo("Opening ${selectedProject.name}...")
-        launchProject(selectedProject.id, projectPath, baseDir)
-    }
 
-    private fun launchProject(projectId: String, projectPath: java.nio.file.Path, baseDir: java.nio.file.Path) {
-        val configRepository = ConfigRepository(baseDir)
-        val projectIdGenerator = ProjectIdGenerator()
-        val projectManager = ProjectManager(configRepository, projectIdGenerator)
-        val directoryManager = DirectoryManager(baseDir)
-        val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-        val vmOptionsGenerator = VMOptionsGenerator()
-        val intellijLocator = IntelliJLocator()
-        val processLauncher = ProcessLauncher()
-        val intellijLauncher = IntelliJLauncher(
-            configRepository,
-            directoryManager,
-            vmOptionsGenerator,
-            baseVMOptionsTracker,
-            intellijLocator,
-            processLauncher
-        )
-        val recentProjectsIndex = RecentProjectsIndex(baseDir)
-
-        // Update project metadata and recent list
-        projectManager.registerOrUpdate(projectId, projectPath)
-        recentProjectsIndex.recordOpen(projectId)
-
-        // Launch IntelliJ
-        intellijLauncher.launch(projectId, projectPath)
+        val launcher = ProjectLauncher.create()
+        launcher.launchById(selectedProject.id, projectPath)
     }
 }
