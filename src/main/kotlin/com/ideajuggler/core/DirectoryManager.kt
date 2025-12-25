@@ -14,7 +14,7 @@ class DirectoryManager(private val baseDir: Path) {
     )
 
     fun ensureProjectDirectories(projectId: String): ProjectDirectories {
-        val root = baseDir.resolve("projects").resolve(projectId)
+        val root = getProjectRoot(projectId)
 
         val directories = ProjectDirectories(
             root = root,
@@ -34,7 +34,7 @@ class DirectoryManager(private val baseDir: Path) {
     }
 
     fun cleanProject(projectId: String) {
-        val projectRoot = baseDir.resolve("projects").resolve(projectId)
+        val projectRoot = getProjectRoot(projectId)
         if (Files.exists(projectRoot)) {
             projectRoot.toFile().deleteRecursively()
         }
