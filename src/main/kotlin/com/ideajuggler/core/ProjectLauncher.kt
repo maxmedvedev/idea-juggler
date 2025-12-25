@@ -14,13 +14,11 @@ class ProjectLauncher(
     private val projectManager = ProjectManager(configRepository)
     private val directoryManager = DirectoryManager(baseDir)
     private val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-    private val vmOptionsGenerator = VMOptionsGenerator()
     private val intellijLocator = IntelliJLocator()
     private val processLauncher = ProcessLauncher()
     private val intellijLauncher = IntelliJLauncher(
         configRepository,
         directoryManager,
-        vmOptionsGenerator,
         baseVMOptionsTracker,
         intellijLocator,
         processLauncher
@@ -70,7 +68,7 @@ class ProjectLauncher(
 
         projects.forEach { project ->
             val projectDirs = directoryManager.ensureProjectDirectories(project.id)
-            vmOptionsGenerator.generate(
+            VMOptionsGenerator.generate(
                 baseVmOptionsPath,
                 VMOptionsGenerator.ProjectDirectories(
                     root = projectDirs.root,

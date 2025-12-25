@@ -5,7 +5,7 @@ import java.nio.file.Path
 import kotlin.io.path.readLines
 import kotlin.io.path.writeText
 
-class VMOptionsGenerator {
+object VMOptionsGenerator {
 
     data class ProjectDirectories(
         val root: Path,

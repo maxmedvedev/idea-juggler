@@ -30,7 +30,6 @@ class IntegrationTest : StringSpec({
             val projectManager = ProjectManager(configRepository)
             val directoryManager = DirectoryManager(baseDir)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-            val vmOptionsGenerator = VMOptionsGenerator()
             val recentProjectsIndex = RecentProjectsIndex(baseDir)
 
             // Step 1: Configure base VM options
@@ -50,7 +49,7 @@ class IntegrationTest : StringSpec({
             projectManager.registerOrUpdate(projectId, projectDir)
 
             val projectDirs = directoryManager.ensureProjectDirectories(projectId)
-            vmOptionsGenerator.generate(
+            VMOptionsGenerator.generate(
                 baseVMOptionsTracker.getBaseVmOptionsPath(),
                 VMOptionsGenerator.ProjectDirectories(
                     root = projectDirs.root,
@@ -121,7 +120,6 @@ class IntegrationTest : StringSpec({
             val projectManager = ProjectManager(configRepository)
             val directoryManager = DirectoryManager(baseDir)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-            val vmOptionsGenerator = VMOptionsGenerator()
 
             // Configure and setup two projects
             configRepository.save(GlobalConfig(baseVmOptionsPath = baseVmOptions.toString()))
@@ -133,12 +131,16 @@ class IntegrationTest : StringSpec({
             val dirs1 = directoryManager.ensureProjectDirectories(projectId1)
             val dirs2 = directoryManager.ensureProjectDirectories(projectId2)
 
-            vmOptionsGenerator.generate(baseVmOptions, VMOptionsGenerator.ProjectDirectories(
-                dirs1.root, dirs1.config, dirs1.system, dirs1.logs, dirs1.plugins
-            ))
-            vmOptionsGenerator.generate(baseVmOptions, VMOptionsGenerator.ProjectDirectories(
-                dirs2.root, dirs2.config, dirs2.system, dirs2.logs, dirs2.plugins
-            ))
+            VMOptionsGenerator.generate(
+                baseVmOptions, VMOptionsGenerator.ProjectDirectories(
+                    dirs1.root, dirs1.config, dirs1.system, dirs1.logs, dirs1.plugins
+                )
+            )
+            VMOptionsGenerator.generate(
+                baseVmOptions, VMOptionsGenerator.ProjectDirectories(
+                    dirs2.root, dirs2.config, dirs2.system, dirs2.logs, dirs2.plugins
+                )
+            )
 
             projectManager.registerOrUpdate(projectId1, projectDir1)
             projectManager.registerOrUpdate(projectId2, projectDir2)
@@ -156,7 +158,7 @@ class IntegrationTest : StringSpec({
             val projects = projectManager.listAll()
             projects.forEach { project ->
                 val projectDirs = directoryManager.ensureProjectDirectories(project.id)
-                vmOptionsGenerator.generate(
+                VMOptionsGenerator.generate(
                     baseVmOptions,
                     VMOptionsGenerator.ProjectDirectories(
                         projectDirs.root,

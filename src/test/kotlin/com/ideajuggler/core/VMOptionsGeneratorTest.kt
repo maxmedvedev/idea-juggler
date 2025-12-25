@@ -12,8 +12,6 @@ import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
 class VMOptionsGeneratorTest : StringSpec({
-    val generator = VMOptionsGenerator()
-
     "should generate VM options file without base file" {
         val tempDir = createTempDirectory("test-project")
         try {
@@ -25,7 +23,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(null, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(null, projectDirs)
 
             Files.exists(vmOptionsFile) shouldBe true
             val content = vmOptionsFile.readText()
@@ -58,7 +56,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(baseVmOptions, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptions, projectDirs)
             val content = vmOptionsFile.readText()
 
             // Should contain base options
@@ -99,7 +97,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(baseVmOptions, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptions, projectDirs)
             val content = vmOptionsFile.readText()
 
             // Should NOT contain old paths
@@ -134,7 +132,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(null, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(null, projectDirs)
 
             vmOptionsFile.parent shouldBe tempDir
             vmOptionsFile.fileName.toString() shouldBe "idea.vmoptions"
@@ -155,7 +153,7 @@ class VMOptionsGeneratorTest : StringSpec({
             )
 
             // Generate first time
-            val vmOptionsFile1 = generator.generate(null, projectDirs)
+            val vmOptionsFile1 = VMOptionsGenerator.generate(null, projectDirs)
             val content1 = vmOptionsFile1.readText()
 
             // Generate second time with different paths
@@ -166,7 +164,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 logs = tempDir.resolve("new-logs"),
                 plugins = tempDir.resolve("new-plugins")
             )
-            val vmOptionsFile2 = generator.generate(null, newProjectDirs)
+            val vmOptionsFile2 = VMOptionsGenerator.generate(null, newProjectDirs)
             val content2 = vmOptionsFile2.readText()
 
             // Files should be the same, but content different
@@ -199,7 +197,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(baseVmOptions, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptions, projectDirs)
             val content = vmOptionsFile.readText()
 
             // Should still have project-specific overrides
@@ -234,7 +232,7 @@ class VMOptionsGeneratorTest : StringSpec({
                 plugins = tempDir.resolve("plugins")
             )
 
-            val vmOptionsFile = generator.generate(baseVmOptions, projectDirs)
+            val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptions, projectDirs)
             val content = vmOptionsFile.readText()
 
             content shouldContain "# This is a comment"

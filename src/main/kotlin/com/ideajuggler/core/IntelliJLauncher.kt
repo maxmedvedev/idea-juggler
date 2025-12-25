@@ -9,7 +9,6 @@ import java.nio.file.Paths
 class IntelliJLauncher(
     private val configRepository: ConfigRepository,
     private val directoryManager: DirectoryManager,
-    private val vmOptionsGenerator: VMOptionsGenerator,
     private val baseVMOptionsTracker: BaseVMOptionsTracker,
     private val intellijLocator: IntelliJLocator,
     private val processLauncher: ProcessLauncher
@@ -23,7 +22,7 @@ class IntelliJLauncher(
         val baseVmOptionsPath = baseVMOptionsTracker.getBaseVmOptionsPath()
 
         // 3. Generate or update VM options file
-        val vmOptionsFile = vmOptionsGenerator.generate(
+        val vmOptionsFile = VMOptionsGenerator.generate(
             baseVmOptionsPath,
             VMOptionsGenerator.ProjectDirectories(
                 root = projectDirs.root,
