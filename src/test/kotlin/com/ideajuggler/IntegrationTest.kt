@@ -5,10 +5,10 @@ import com.ideajuggler.config.GlobalConfig
 import com.ideajuggler.config.RecentProjectsIndex
 import com.ideajuggler.core.*
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import java.nio.file.Files
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.createTempFile
@@ -28,9 +28,9 @@ class IntegrationTest : StringSpec({
             // Initialize all components
             val configRepository = ConfigRepository(baseDir)
             val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(baseDir)
+            val directoryManager = DirectoryManager(configRepository)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-            val recentProjectsIndex = RecentProjectsIndex(baseDir)
+            val recentProjectsIndex = RecentProjectsIndex(configRepository)
 
             // Step 1: Configure base VM options
             configRepository.save(
@@ -118,7 +118,7 @@ class IntegrationTest : StringSpec({
 
             val configRepository = ConfigRepository(baseDir)
             val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(baseDir)
+            val directoryManager = DirectoryManager(configRepository)
             val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
 
             // Configure and setup two projects
@@ -201,7 +201,7 @@ class IntegrationTest : StringSpec({
         try {
             val configRepository = ConfigRepository(baseDir)
             val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(baseDir)
+            val directoryManager = DirectoryManager(configRepository)
 
             // Create three projects
             val id1 = ProjectIdGenerator.generate(projectDir1)

@@ -10,7 +10,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
-class ConfigRepository(private val baseDir: Path) {
+class ConfigRepository(val baseDir: Path) {
     private val configFile = baseDir.resolve("config.json")
     private val projectsDir = baseDir.resolve("projects")
 
@@ -101,5 +101,7 @@ class ConfigRepository(private val baseDir: Path) {
         fun getDefaultBaseDir(): Path {
             return Paths.get(System.getProperty("user.home"), ".idea-juggler")
         }
+
+        fun create() = ConfigRepository(getDefaultBaseDir())
     }
 }

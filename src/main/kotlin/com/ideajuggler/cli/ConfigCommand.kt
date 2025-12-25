@@ -20,8 +20,7 @@ class ConfigCommand : CliktCommand(
     private val show by option("--show", help = "Show current configuration").flag()
 
     override fun run() {
-        val baseDir = ConfigRepository.getDefaultBaseDir()
-        val configRepository = ConfigRepository(baseDir)
+        val configRepository = ConfigRepository.create()
         val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
 
         when {

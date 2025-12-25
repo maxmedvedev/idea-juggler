@@ -4,14 +4,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.nio.file.Files
-import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
-class RecentProjectsIndex(private val baseDir: Path) {
-    private val recentFile = baseDir.resolve("recent.json")
-    private val configRepository = ConfigRepository(baseDir)
+class RecentProjectsIndex(private val configRepository: ConfigRepository) {
+    private val recentFile = configRepository.baseDir.resolve("recent.json")
 
     private val json = Json {
         prettyPrint = true
@@ -47,7 +45,7 @@ class RecentProjectsIndex(private val baseDir: Path) {
     }
 
     private fun saveEntries(entries: List<RecentEntry>) {
-        Files.createDirectories(baseDir)
+        Files.createDirectories(configRepository.baseDir)
         recentFile.writeText(json.encodeToString(entries))
     }
 

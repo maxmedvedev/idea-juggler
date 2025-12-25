@@ -1,5 +1,6 @@
 package com.ideajuggler.core
 
+import com.ideajuggler.config.ConfigRepository
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.nio.file.Files
@@ -11,7 +12,8 @@ class DirectoryManagerTest : StringSpec({
     "should create all project directories" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -29,7 +31,8 @@ class DirectoryManagerTest : StringSpec({
     "should create directories under correct base path" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -43,7 +46,8 @@ class DirectoryManagerTest : StringSpec({
     "should create nested directory structure correctly" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -60,7 +64,8 @@ class DirectoryManagerTest : StringSpec({
     "should not fail if directories already exist" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
             val projectId = "test-project-123"
 
             // Create first time
@@ -82,7 +87,8 @@ class DirectoryManagerTest : StringSpec({
     "should clean project directories completely" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
             val projectId = "test-project-123"
 
             // Create directories
@@ -110,7 +116,8 @@ class DirectoryManagerTest : StringSpec({
     "should not fail when cleaning non-existent project" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
 
             // Try to clean non-existent project (should not throw)
             manager.cleanProject("non-existent-project")
@@ -122,7 +129,9 @@ class DirectoryManagerTest : StringSpec({
     "should get correct project root path" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
+
             val projectId = "test-project-123"
 
             val root = manager.getProjectRoot(projectId)
@@ -136,7 +145,9 @@ class DirectoryManagerTest : StringSpec({
     "should handle project IDs with special characters" {
         val tempDir = createTempDirectory("test-base")
         try {
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
+
             val projectId = "test-project-@#$-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -154,7 +165,9 @@ class DirectoryManagerTest : StringSpec({
             // Delete the temp directory to test creation from scratch
             tempDir.toFile().deleteRecursively()
 
-            val manager = DirectoryManager(tempDir)
+            val configRepository = ConfigRepository(tempDir)
+            val manager = DirectoryManager(configRepository)
+
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)

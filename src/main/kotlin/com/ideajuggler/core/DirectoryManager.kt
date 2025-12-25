@@ -1,11 +1,12 @@
 package com.ideajuggler.core
 
+import com.ideajuggler.config.ConfigRepository
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.deleteRecursively
 
-class DirectoryManager(private val baseDir: Path) {
+class DirectoryManager(private val configRepository: ConfigRepository) {
 
     fun ensureProjectDirectories(projectId: String): ProjectDirectories {
         val root = getProjectRoot(projectId)
@@ -36,6 +37,6 @@ class DirectoryManager(private val baseDir: Path) {
     }
 
     fun getProjectRoot(projectId: String): Path {
-        return baseDir.resolve("projects").resolve(projectId)
+        return configRepository.baseDir.resolve("projects").resolve(projectId)
     }
 }

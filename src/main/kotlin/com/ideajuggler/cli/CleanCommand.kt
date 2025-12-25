@@ -21,11 +21,10 @@ class CleanCommand : CliktCommand(
     private val force by option("-f", "--force", help = "Skip confirmation prompt").flag()
 
     override fun run() {
-        val baseDir = ConfigRepository.getDefaultBaseDir()
-        val configRepository = ConfigRepository(baseDir)
+        val configRepository = ConfigRepository.create()
         val projectManager = ProjectManager(configRepository)
-        val directoryManager = DirectoryManager(baseDir)
-        val recentProjectsIndex = RecentProjectsIndex(baseDir)
+        val directoryManager = DirectoryManager(configRepository)
+        val recentProjectsIndex = RecentProjectsIndex(configRepository)
 
         // Resolve project ID from identifier (could be ID or path)
         val projectId = resolveProjectId(projectIdentifier, projectManager)

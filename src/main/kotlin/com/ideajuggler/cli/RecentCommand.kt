@@ -20,8 +20,7 @@ class RecentCommand : CliktCommand(
         .default(10)
 
     override fun run() {
-        val baseDir = ConfigRepository.getDefaultBaseDir()
-        val recentProjectsIndex = RecentProjectsIndex(baseDir)
+        val recentProjectsIndex = RecentProjectsIndex(ConfigRepository.create())
 
         val recentProjects = recentProjectsIndex.getRecent(limit)
 

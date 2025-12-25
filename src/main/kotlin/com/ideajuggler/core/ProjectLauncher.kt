@@ -5,18 +5,13 @@ import com.ideajuggler.config.RecentProjectsIndex
 import java.nio.file.Path
 
 class ProjectLauncher(
-    private val baseDir: Path
+    configRepository: ConfigRepository
 ) {
-    private val configRepository = ConfigRepository(baseDir)
     private val projectManager = ProjectManager(configRepository)
-    private val directoryManager = DirectoryManager(baseDir)
+    private val directoryManager = DirectoryManager(configRepository)
     private val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-    private val intellijLauncher = IntelliJLauncher(
-        configRepository,
-        directoryManager,
-        baseVMOptionsTracker,
-    )
-    private val recentProjectsIndex = RecentProjectsIndex(baseDir)
+    private val intellijLauncher = IntelliJLauncher(configRepository)
+    private val recentProjectsIndex = RecentProjectsIndex(configRepository)
 
     /**
      * Launch a project by path, handling base VM options changes and project registration
@@ -75,9 +70,6 @@ class ProjectLauncher(
     }
 
     companion object {
-        fun create(): ProjectLauncher {
-            val baseDir = ConfigRepository.getDefaultBaseDir()
-            return ProjectLauncher(baseDir)
-        }
+        fun create(): ProjectLauncher = ProjectLauncher(ConfigRepository.create())
     }
 }

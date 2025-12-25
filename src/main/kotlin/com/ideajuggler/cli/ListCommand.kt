@@ -15,8 +15,7 @@ class ListCommand : CliktCommand(
     private val verbose by option("-v", "--verbose", help = "Show detailed information").flag()
 
     override fun run() {
-        val baseDir = ConfigRepository.getDefaultBaseDir()
-        val configRepository = ConfigRepository(baseDir)
+        val configRepository = ConfigRepository.create()
         val projectManager = ProjectManager(configRepository)
 
         val projects = projectManager.listAll()
