@@ -2,7 +2,7 @@ package com.ideajuggler.platform
 
 import java.nio.file.Path
 
-class ProcessLauncher {
+object ProcessLauncher {
 
     fun launch(executable: Path, args: List<String>, environment: Map<String, String> = emptyMap()) {
         val processBuilder = when (Platform.current()) {

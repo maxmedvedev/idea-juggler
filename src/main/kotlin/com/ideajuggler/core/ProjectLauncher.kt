@@ -2,10 +2,7 @@ package com.ideajuggler.core
 
 import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.config.RecentProjectsIndex
-import com.ideajuggler.platform.IntelliJLocator
-import com.ideajuggler.platform.ProcessLauncher
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class ProjectLauncher(
     private val baseDir: Path
@@ -14,13 +11,10 @@ class ProjectLauncher(
     private val projectManager = ProjectManager(configRepository)
     private val directoryManager = DirectoryManager(baseDir)
     private val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-    private val intellijLocator = IntelliJLocator
-    private val processLauncher = ProcessLauncher()
     private val intellijLauncher = IntelliJLauncher(
         configRepository,
         directoryManager,
         baseVMOptionsTracker,
-        processLauncher
     )
     private val recentProjectsIndex = RecentProjectsIndex(baseDir)
 

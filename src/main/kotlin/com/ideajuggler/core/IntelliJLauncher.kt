@@ -10,9 +10,7 @@ class IntelliJLauncher(
     private val configRepository: ConfigRepository,
     private val directoryManager: DirectoryManager,
     private val baseVMOptionsTracker: BaseVMOptionsTracker,
-    private val processLauncher: ProcessLauncher
 ) {
-
     fun launch(projectId: String, projectPath: Path) {
         // 1. Ensure project directories exist
         val projectDirs = directoryManager.ensureProjectDirectories(projectId)
@@ -40,7 +38,7 @@ class IntelliJLauncher(
 
         // 5. Launch IntelliJ with custom VM options
         val environment = mapOf("IDEA_VM_OPTIONS" to vmOptionsFile.toString())
-        processLauncher.launch(intellijPath, listOf(projectPath.toString()), environment)
+        ProcessLauncher.launch(intellijPath, listOf(projectPath.toString()), environment)
 
         println("Launched IntelliJ IDEA for project: ${projectPath.fileName}")
         println("Project ID: $projectId")
