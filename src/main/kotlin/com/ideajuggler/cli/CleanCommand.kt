@@ -22,9 +22,9 @@ class CleanCommand : CliktCommand(
 
     override fun run() {
         val configRepository = ConfigRepository.create()
-        val projectManager = ProjectManager(configRepository)
-        val directoryManager = DirectoryManager(configRepository)
-        val recentProjectsIndex = RecentProjectsIndex(configRepository)
+        val projectManager = ProjectManager.getInstance(configRepository)
+        val directoryManager = DirectoryManager.getInstance(configRepository)
+        val recentProjectsIndex = RecentProjectsIndex.getInstance(configRepository)
 
         // Resolve project ID from identifier (could be ID or path)
         val projectId = resolveProjectId(projectIdentifier, projectManager)

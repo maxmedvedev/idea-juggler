@@ -16,7 +16,7 @@ class ListCommand : CliktCommand(
 
     override fun run() {
         val configRepository = ConfigRepository.create()
-        val projectManager = ProjectManager(configRepository)
+        val projectManager = ProjectManager.getInstance(configRepository)
 
         val projects = projectManager.listAll()
 

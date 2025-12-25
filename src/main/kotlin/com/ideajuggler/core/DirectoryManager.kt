@@ -39,4 +39,8 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
     fun getProjectRoot(projectId: String): Path {
         return configRepository.baseDir.resolve("projects").resolve(projectId)
     }
+
+    companion object {
+        fun getInstance(configRepository: ConfigRepository) = DirectoryManager(configRepository)
+    }
 }

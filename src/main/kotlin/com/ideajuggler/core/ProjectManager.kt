@@ -40,4 +40,8 @@ class ProjectManager(
         val projectId = ProjectIdGenerator.generate(projectPath)
         return configRepository.loadProjectMetadata(projectId)
     }
+
+    companion object {
+        fun getInstance(configRepository: ConfigRepository) = ProjectManager(configRepository)
+    }
 }

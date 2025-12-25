@@ -3,6 +3,7 @@ package com.ideajuggler.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.types.path
+import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.core.ProjectLauncher
 
 class OpenCommand : CliktCommand(
@@ -13,8 +14,8 @@ class OpenCommand : CliktCommand(
         .path(mustExist = true, canBeFile = false, canBeDir = true)
 
     override fun run() {
-        val launcher = ProjectLauncher.create()
-
+        val configRepository = ConfigRepository.create()
+        val launcher = ProjectLauncher.getInstance(configRepository)
         launcher.launchByPath(projectPath) {
             echo("Base VM options changed, regenerating configurations for all projects...")
         }

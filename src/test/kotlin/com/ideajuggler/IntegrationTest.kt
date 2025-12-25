@@ -27,10 +27,10 @@ class IntegrationTest : StringSpec({
 
             // Initialize all components
             val configRepository = ConfigRepository(baseDir)
-            val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(configRepository)
-            val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-            val recentProjectsIndex = RecentProjectsIndex(configRepository)
+            val projectManager = ProjectManager.getInstance(configRepository)
+            val directoryManager = DirectoryManager.getInstance(configRepository)
+            val baseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
+            val recentProjectsIndex = RecentProjectsIndex.getInstance(configRepository)
 
             // Step 1: Configure base VM options
             configRepository.save(
@@ -117,9 +117,9 @@ class IntegrationTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(baseDir)
-            val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(configRepository)
-            val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
+            val projectManager = ProjectManager.getInstance(configRepository)
+            val directoryManager = DirectoryManager.getInstance(configRepository)
+            val baseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Configure and setup two projects
             configRepository.save(GlobalConfig(baseVmOptionsPath = baseVmOptions.toString()))
@@ -200,8 +200,8 @@ class IntegrationTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(baseDir)
-            val projectManager = ProjectManager(configRepository)
-            val directoryManager = DirectoryManager(configRepository)
+            val projectManager = ProjectManager.getInstance(configRepository)
+            val directoryManager = DirectoryManager.getInstance(configRepository)
 
             // Create three projects
             val id1 = ProjectIdGenerator.generate(projectDir1)

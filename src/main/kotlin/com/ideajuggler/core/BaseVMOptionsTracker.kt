@@ -41,4 +41,8 @@ class BaseVMOptionsTracker(private val configRepository: ConfigRepository) {
         val path = Path.of(pathString)
         return if (path.exists()) path else null
     }
+
+    companion object {
+        fun getInstance(configRepository: ConfigRepository) = BaseVMOptionsTracker(configRepository)
+    }
 }

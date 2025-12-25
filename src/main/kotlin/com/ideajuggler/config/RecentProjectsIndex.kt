@@ -53,4 +53,8 @@ class RecentProjectsIndex(private val configRepository: ConfigRepository) {
         val entries = loadEntries().filter { it.projectId != projectId }
         saveEntries(entries)
     }
+
+    companion object {
+        fun getInstance(configRepository: ConfigRepository) = RecentProjectsIndex(configRepository)
+    }
 }

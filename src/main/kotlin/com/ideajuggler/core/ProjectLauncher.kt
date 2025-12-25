@@ -7,11 +7,11 @@ import java.nio.file.Path
 class ProjectLauncher(
     configRepository: ConfigRepository
 ) {
-    private val projectManager = ProjectManager(configRepository)
-    private val directoryManager = DirectoryManager(configRepository)
-    private val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
-    private val intellijLauncher = IntelliJLauncher(configRepository)
-    private val recentProjectsIndex = RecentProjectsIndex(configRepository)
+    private val projectManager = ProjectManager.getInstance(configRepository)
+    private val directoryManager = DirectoryManager.getInstance(configRepository)
+    private val baseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
+    private val intellijLauncher = IntelliJLauncher.getInstance(configRepository)
+    private val recentProjectsIndex = RecentProjectsIndex.getInstance(configRepository)
 
     /**
      * Launch a project by path, handling base VM options changes and project registration
@@ -70,6 +70,6 @@ class ProjectLauncher(
     }
 
     companion object {
-        fun create(): ProjectLauncher = ProjectLauncher(ConfigRepository.create())
+        fun getInstance(configRepository: ConfigRepository): ProjectLauncher = ProjectLauncher(configRepository)
     }
 }

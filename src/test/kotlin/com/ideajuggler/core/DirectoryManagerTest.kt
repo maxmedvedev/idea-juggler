@@ -13,7 +13,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -32,7 +32,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -47,7 +47,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
             val projectId = "test-project-123"
 
             val dirs = manager.ensureProjectDirectories(projectId)
@@ -65,7 +65,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
             val projectId = "test-project-123"
 
             // Create first time
@@ -88,7 +88,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
             val projectId = "test-project-123"
 
             // Create directories
@@ -117,7 +117,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
 
             // Try to clean non-existent project (should not throw)
             manager.cleanProject("non-existent-project")
@@ -130,7 +130,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
 
             val projectId = "test-project-123"
 
@@ -146,7 +146,7 @@ class DirectoryManagerTest : StringSpec({
         val tempDir = createTempDirectory("test-base")
         try {
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
 
             val projectId = "test-project-@#$-123"
 
@@ -166,7 +166,7 @@ class DirectoryManagerTest : StringSpec({
             tempDir.toFile().deleteRecursively()
 
             val configRepository = ConfigRepository(tempDir)
-            val manager = DirectoryManager(configRepository)
+            val manager = DirectoryManager.getInstance(configRepository)
 
             val projectId = "test-project-123"
 

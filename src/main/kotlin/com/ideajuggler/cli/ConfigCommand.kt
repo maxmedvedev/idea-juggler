@@ -21,7 +21,7 @@ class ConfigCommand : CliktCommand(
 
     override fun run() {
         val configRepository = ConfigRepository.create()
-        val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
+        val baseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
 
         when {
             show -> showConfig(configRepository)

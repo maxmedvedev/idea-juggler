@@ -9,8 +9,8 @@ import java.nio.file.Paths
 class IntelliJLauncher(
     private val configRepository: ConfigRepository,
 ) {
-    private val directoryManager: DirectoryManager = DirectoryManager(configRepository)
-    private val baseVMOptionsTracker: BaseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
+    private val directoryManager: DirectoryManager = DirectoryManager.getInstance(configRepository)
+    private val baseVMOptionsTracker: BaseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
 
     fun launch(projectId: String, projectPath: Path) {
         // 1. Ensure project directories exist
@@ -46,5 +46,9 @@ class IntelliJLauncher(
 
         // Otherwise, try to auto-detect
         return IntelliJLocator.findIntelliJ()
+    }
+
+    companion object {
+        fun getInstance(configRepository: ConfigRepository) = IntelliJLauncher(configRepository)
     }
 }

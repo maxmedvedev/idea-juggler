@@ -20,7 +20,7 @@ class RecentCommand : CliktCommand(
         .default(10)
 
     override fun run() {
-        val recentProjectsIndex = RecentProjectsIndex(ConfigRepository.create())
+        val recentProjectsIndex = RecentProjectsIndex.getInstance(ConfigRepository.create())
 
         val recentProjects = recentProjectsIndex.getRecent(limit)
 
@@ -60,7 +60,7 @@ class RecentCommand : CliktCommand(
         // Launch the selected project
         echo("Opening ${selectedProject.name}...")
 
-        val launcher = ProjectLauncher.create()
+        val launcher = ProjectLauncher.getInstance(ConfigRepository.create())
         launcher.launchById(selectedProject.id, projectPath)
     }
 }

@@ -19,7 +19,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Set up initial config with matching hash
             configRepository.save(
@@ -44,7 +44,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Set up initial config with old hash
             configRepository.save(
@@ -69,7 +69,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Configure base path first
             configRepository.save(
@@ -100,7 +100,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // No base VM options configured
             tracker.hasChanged() shouldBe false
@@ -114,7 +114,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Configure with non-existent path
             configRepository.save(
@@ -138,7 +138,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
             baseVmOptions.writeText("-Xms256m\n-Xmx2048m")
 
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             // Configure base path
             configRepository.save(
@@ -170,7 +170,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
             baseVmOptions.writeText("-Xms256m")
 
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             configRepository.save(
                 GlobalConfig(
@@ -191,7 +191,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             val path = tracker.getBaseVmOptionsPath()
             path shouldBe null
@@ -205,7 +205,7 @@ class BaseVMOptionsTrackerTest : StringSpec({
 
         try {
             val configRepository = ConfigRepository(tempDir)
-            val tracker = BaseVMOptionsTracker(configRepository)
+            val tracker = BaseVMOptionsTracker.getInstance(configRepository)
 
             configRepository.save(
                 GlobalConfig(
