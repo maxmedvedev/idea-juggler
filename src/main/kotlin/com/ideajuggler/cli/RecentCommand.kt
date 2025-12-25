@@ -1,6 +1,7 @@
 package com.ideajuggler.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.terminal
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
@@ -41,7 +42,7 @@ class RecentCommand : CliktCommand(
         }
 
         // Interactive selection
-        val selection = prompt("Select project number to open (or press Enter to cancel)")
+        val selection = terminal.prompt("Select project number to open (or press Enter to cancel)")
 
         if (selection.isNullOrBlank()) {
             echo("Cancelled.")
