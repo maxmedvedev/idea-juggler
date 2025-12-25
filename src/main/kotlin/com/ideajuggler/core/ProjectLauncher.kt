@@ -45,6 +45,8 @@ class ProjectLauncher(
 
         projects.forEach { project ->
             val projectDirs = directoryManager.ensureProjectDirectories(project.id)
+            // Ensure debug port is allocated
+            val debugPort = projectManager.ensureDebugPort(project.id)
             VMOptionsGenerator.generate(
                 baseVmOptionsPath,
                 ProjectDirectories(
@@ -53,7 +55,8 @@ class ProjectLauncher(
                     system = projectDirs.system,
                     logs = projectDirs.logs,
                     plugins = projectDirs.plugins
-                )
+                ),
+                debugPort
             )
         }
     }

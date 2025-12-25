@@ -49,6 +49,8 @@ class IntegrationTest : StringSpec({
             projectManager.registerOrUpdate(projectId, projectDir)
 
             val projectDirs = directoryManager.ensureProjectDirectories(projectId)
+            // Allocate debug port
+            val debugPort = projectManager.ensureDebugPort(projectId)
             VMOptionsGenerator.generate(
                 baseVMOptionsTracker.getBaseVmOptionsPath(),
                 ProjectDirectories(
@@ -57,7 +59,8 @@ class IntegrationTest : StringSpec({
                     system = projectDirs.system,
                     logs = projectDirs.logs,
                     plugins = projectDirs.plugins
-                )
+                ),
+                debugPort
             )
 
             recentProjectsIndex.recordOpen(projectId)
@@ -128,22 +131,28 @@ class IntegrationTest : StringSpec({
             val projectId1 = ProjectIdGenerator.generate(projectDir1)
             val projectId2 = ProjectIdGenerator.generate(projectDir2)
 
+            projectManager.registerOrUpdate(projectId1, projectDir1)
+            projectManager.registerOrUpdate(projectId2, projectDir2)
+
             val dirs1 = directoryManager.ensureProjectDirectories(projectId1)
             val dirs2 = directoryManager.ensureProjectDirectories(projectId2)
+
+            // Allocate debug ports
+            val debugPort1 = projectManager.ensureDebugPort(projectId1)
+            val debugPort2 = projectManager.ensureDebugPort(projectId2)
 
             VMOptionsGenerator.generate(
                 baseVmOptions, ProjectDirectories(
                     dirs1.root, dirs1.config, dirs1.system, dirs1.logs, dirs1.plugins
-                )
+                ),
+                debugPort1
             )
             VMOptionsGenerator.generate(
                 baseVmOptions, ProjectDirectories(
                     dirs2.root, dirs2.config, dirs2.system, dirs2.logs, dirs2.plugins
-                )
+                ),
+                debugPort2
             )
-
-            projectManager.registerOrUpdate(projectId1, projectDir1)
-            projectManager.registerOrUpdate(projectId2, projectDir2)
 
             // Verify no changes detected initially
             baseVMOptionsTracker.hasChanged() shouldBe false
@@ -158,6 +167,8 @@ class IntegrationTest : StringSpec({
             val projects = projectManager.listAll()
             projects.forEach { project ->
                 val projectDirs = directoryManager.ensureProjectDirectories(project.id)
+                // Allocate debug port
+                val debugPort = projectManager.ensureDebugPort(project.id)
                 VMOptionsGenerator.generate(
                     baseVmOptions,
                     ProjectDirectories(
@@ -166,7 +177,8 @@ class IntegrationTest : StringSpec({
                         projectDirs.system,
                         projectDirs.logs,
                         projectDirs.plugins
-                    )
+                    ),
+                    debugPort
                 )
             }
 

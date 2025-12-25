@@ -11,6 +11,7 @@ class IntelliJLauncher(
 ) {
     private val directoryManager: DirectoryManager = DirectoryManager.getInstance(configRepository)
     private val baseVMOptionsTracker: BaseVMOptionsTracker = BaseVMOptionsTracker.getInstance(configRepository)
+    private val projectManager: ProjectManager = ProjectManager.getInstance(configRepository)
 
     fun launch(projectId: String, projectPath: Path) {
         // 1. Ensure project directories exist
@@ -19,8 +20,11 @@ class IntelliJLauncher(
         // 2. Get base VM options path (if configured)
         val baseVmOptionsPath = baseVMOptionsTracker.getBaseVmOptionsPath()
 
-        // 3. Generate or update VM options file
-        val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptionsPath, projectDirs)
+        // 3. Ensure debug port is allocated (if base VM options contains JDWP)
+        val debugPort = projectManager.ensureDebugPort(projectId)
+
+        // 4. Generate or update VM options file
+        val vmOptionsFile = VMOptionsGenerator.generate(baseVmOptionsPath, projectDirs, debugPort)
 
         // 4. Find IntelliJ executable
         val intellijPath = getIntelliJPath()
