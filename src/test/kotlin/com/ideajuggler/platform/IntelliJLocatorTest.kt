@@ -4,8 +4,6 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.nio.file.Files
-import kotlin.io.path.createTempDirectory
-import kotlin.io.path.createTempFile
 
 class IntelliJLocatorTest : StringSpec({
 
@@ -14,11 +12,9 @@ class IntelliJLocatorTest : StringSpec({
 
         // This test might find actual IntelliJ installations on the system
         // So we just verify the method doesn't throw
-        val result = locator.findIntelliJ()
-
         // Result can be null or a valid path
         // We just verify it doesn't crash
-        result // Just access it to ensure no exception
+        locator.findIntelliJ()
     }
 
     "should detect IntelliJ on current platform" {
