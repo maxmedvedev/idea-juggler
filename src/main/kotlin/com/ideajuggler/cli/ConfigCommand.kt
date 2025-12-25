@@ -20,7 +20,7 @@ class ConfigCommand : CliktCommand(
     private val show by option("--show", help = "Show current configuration").flag()
 
     override fun run() {
-        val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
+        val baseDir = ConfigRepository.getDefaultBaseDir()
         val configRepository = ConfigRepository(baseDir)
         val baseVMOptionsTracker = BaseVMOptionsTracker(configRepository)
 

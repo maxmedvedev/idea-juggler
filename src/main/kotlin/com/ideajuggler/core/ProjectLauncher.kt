@@ -76,7 +76,7 @@ class ProjectLauncher(
 
     companion object {
         fun create(): ProjectLauncher {
-            val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
+            val baseDir = ConfigRepository.getDefaultBaseDir()
             return ProjectLauncher(baseDir)
         }
     }

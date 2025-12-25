@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
+import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.config.RecentProjectsIndex
 import com.ideajuggler.core.ProjectLauncher
 import com.ideajuggler.util.TimeUtils
@@ -18,7 +19,7 @@ class RecentCommand : CliktCommand(
         .default(10)
 
     override fun run() {
-        val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
+        val baseDir = ConfigRepository.getDefaultBaseDir()
         val recentProjectsIndex = RecentProjectsIndex(baseDir)
 
         val recentProjects = recentProjectsIndex.getRecent(limit)

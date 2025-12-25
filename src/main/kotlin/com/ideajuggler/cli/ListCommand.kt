@@ -15,7 +15,7 @@ class ListCommand : CliktCommand(
     private val verbose by option("-v", "--verbose", help = "Show detailed information").flag()
 
     override fun run() {
-        val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
+        val baseDir = ConfigRepository.getDefaultBaseDir()
         val configRepository = ConfigRepository(baseDir)
         val projectManager = ProjectManager(configRepository)
 

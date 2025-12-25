@@ -21,7 +21,7 @@ class CleanCommand : CliktCommand(
     private val force by option("-f", "--force", help = "Skip confirmation prompt").flag()
 
     override fun run() {
-        val baseDir = Paths.get(System.getProperty("user.home"), ".idea-juggler")
+        val baseDir = ConfigRepository.getDefaultBaseDir()
         val configRepository = ConfigRepository(baseDir)
         val projectManager = ProjectManager(configRepository)
         val directoryManager = DirectoryManager(baseDir)

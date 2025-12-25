@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
@@ -93,6 +94,12 @@ class ConfigRepository(private val baseDir: Path) {
             raf.channel.lock().use {
                 block()
             }
+        }
+    }
+
+    companion object {
+        fun getDefaultBaseDir(): Path {
+            return Paths.get(System.getProperty("user.home"), ".idea-juggler")
         }
     }
 }
