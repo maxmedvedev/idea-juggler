@@ -1,16 +1,16 @@
 <idea-plugin>
     <id>com.max.medvedev.idea-juggler</id>d>
-    <name>idea-juggler</name>
+    <name>IDEA Juggler</name>
     <vendor>Max Medvedev</vendor>
 
     <description><![CDATA[
-        Open the current project in a new idea-juggler instance with isolated configuration.
+        Allows opening any project in a new IntelliJ IDEA instance with an isolated configuration.
+        It helps keep your IDE caches clean and free of unnecessary stuff.
 
-        <p>Features:</p>
+        <p>Details:</p>
         <ul>
-            <li>Quick action to open current project in isolated IntelliJ instance</li>
-            <li>Keeps current window open while launching new instance</li>
-            <li>Each project gets dedicated config, system, and plugin directories</li>
+            <li>The configuration is copied from the main IJ instance.</li>
+            <li>Each project is open with the same configuration each time.</li>
         </ul>
     ]]></description>
 
