@@ -11,7 +11,7 @@ import com.intellij.openapi.project.Project
 
 internal object ProjectLauncherHelper {
     /**
-     * Launches a project with IDEA Juggler in a background thread and shows notifications.
+     * Launches a project with Project Juggler in a background thread and shows notifications.
      *
      * @param project The current IDE project (for notifications, can be null)
      * @param configRepository The configuration repository

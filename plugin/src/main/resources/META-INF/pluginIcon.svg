@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="Idea Juggler icon (IJ monogram with fireballs)">
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="Idea Juggler icon (generic IDE frame with fireballs)">
     <defs>
         <!-- Background -->
         <linearGradient id="bg" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
@@ -35,9 +35,9 @@
             <feGaussianBlur stdDeviation="1.2" result="b"/>
             <feColorMatrix in="b" type="matrix"
                            values="1 0 0 0 0
-                0 0.75 0 0 0
-                0 0 0.25 0 0
-                0 0 0 0.9 0" />
+                                   0 0.75 0 0 0
+                                   0 0 0.25 0 0
+                                   0 0 0 0.9 0" />
             <feMerge>
                 <feMergeNode/>
                 <feMergeNode in="SourceGraphic"/>
@@ -54,22 +54,32 @@
         <path d="M9.2 23.8 C14.2 15.0, 25.8 15.0, 30.8 23.8" stroke-opacity="0.22" stroke-width="1.2"/>
     </g>
 
-    <!-- Center tile with IJ monogram -->
+    <!-- Center tile with generic IDE frame -->
     <g filter="url(#shadow)">
         <rect x="11.2" y="11.2" width="17.6" height="17.6" rx="3.6" fill="url(#tile)"/>
-        <rect x="11.2" y="11.2" width="17.6" height="17.6" rx="3.6" fill="none" stroke="#FFFFFF" stroke-opacity="0.18"/>
+        <rect x="11.2" y="11.2" width="17.6" height="17.6" rx="3.6"
+              fill="none" stroke="#FFFFFF" stroke-opacity="0.18"/>
 
-        <!-- IJ monogram (generic, not official logo) -->
-        <text x="20" y="23.2"
-              text-anchor="middle"
-              font-family="Inter, Arial, sans-serif"
-              font-size="9.6"
-              font-weight="900"
-              letter-spacing="0.6"
-              fill="#FFFFFF">IJ</text>
+        <!-- IDE window -->
+        <g transform="translate(13.4 13.6)">
+            <!-- window body -->
+            <rect x="0" y="0" width="13.2" height="12.8" rx="1.6"
+                  fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="0.9"/>
 
-        <!-- small underline accent -->
-        <rect x="15.2" y="25.2" width="9.6" height="1.6" rx="0.8" fill="#FFFFFF" opacity="0.9"/>
+            <!-- title bar -->
+            <rect x="0" y="0" width="13.2" height="3.0" rx="1.6"
+                  fill="#FFFFFF" opacity="0.18"/>
+
+            <!-- window controls -->
+            <circle cx="2.0" cy="1.5" r="0.6" fill="#FFFFFF" opacity="0.8"/>
+            <circle cx="3.8" cy="1.5" r="0.6" fill="#FFFFFF" opacity="0.6"/>
+            <circle cx="5.6" cy="1.5" r="0.6" fill="#FFFFFF" opacity="0.4"/>
+
+            <!-- editor lines -->
+            <rect x="1.8" y="4.6" width="9.6" height="0.9" rx="0.45" fill="#FFFFFF" opacity="0.9"/>
+            <rect x="1.8" y="6.6" width="7.2" height="0.9" rx="0.45" fill="#FFFFFF" opacity="0.75"/>
+            <rect x="1.8" y="8.6" width="8.4" height="0.9" rx="0.45" fill="#FFFFFF" opacity="0.6"/>
+        </g>
     </g>
 
     <!-- Fireballs -->
@@ -106,5 +116,6 @@
     </g>
 
     <!-- Subtle inner border -->
-    <rect x="2.8" y="2.8" width="34.4" height="34.4" rx="8.2" fill="none" stroke="#FFFFFF" stroke-opacity="0.16"/>
+    <rect x="2.8" y="2.8" width="34.4" height="34.4" rx="8.2"
+          fill="none" stroke="#FFFFFF" stroke-opacity="0.16"/>
 </svg>

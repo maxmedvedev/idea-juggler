@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>com.max.medvedev.idea-juggler</id>d>
-    <name>IDEA Juggler</name>
+    <id>maxmedvedev.project-juggler</id>d>
+    <name>Project Juggler</name>
     <vendor>Max Medvedev</vendor>
 
     <description><![CDATA[
