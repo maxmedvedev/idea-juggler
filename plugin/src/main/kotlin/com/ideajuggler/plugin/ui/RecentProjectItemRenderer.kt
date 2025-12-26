@@ -34,7 +34,8 @@ internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
         // Get project icon using IntelliJ's icon helper
         val projectIcon = recentProjectsManager.getProjectIcon(value.metadata.path.path, true)
         val iconLabel = JLabel(projectIcon)
-        iconLabel.border = JBUI.Borders.emptyRight(8)
+        iconLabel.verticalAlignment = SwingConstants.TOP
+        iconLabel.border = JBUI.Borders.empty(2, 0, 0, 8)
         panel.add(iconLabel, BorderLayout.WEST)
 
         // Content panel with multiple lines
