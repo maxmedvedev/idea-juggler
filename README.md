@@ -1,4 +1,4 @@
-# idea-juggler
+# project-juggler
 
 A Kotlin-based CLI tool that manages separate IntelliJ IDEA instances per project with isolated configurations. Each project gets its own config, system, logs, and plugins directories while sharing the same IntelliJ installation.
 
@@ -18,8 +18,8 @@ A Kotlin-based CLI tool that manages separate IntelliJ IDEA instances per projec
 ### Via Homebrew (macOS and Linux)
 
 ```bash
-brew tap maxmedvedev/idea-juggler
-brew install idea-juggler
+brew tap maxmedvedev/project-juggler
+brew install project-juggler
 ```
 
 ### Prerequisites
@@ -33,7 +33,7 @@ brew install idea-juggler
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd idea-juggler
+cd project-juggler
 
 # Build the application
 ./gradlew build
@@ -51,10 +51,10 @@ After building, copy the binary to a location in your PATH:
 
 ```bash
 # macOS/Linux
-sudo cp build/libs/idea-juggler-1.0.0.jar /usr/local/bin/idea-juggler
+sudo cp build/libs/project-juggler-1.0.0.jar /usr/local/bin/project-juggler
 
 # Or if you built a native image
-sudo cp build/native/nativeCompile/idea-juggler /usr/local/bin/
+sudo cp build/native/nativeCompile/project-juggler /usr/local/bin/
 ```
 
 ## Quick Start
@@ -64,7 +64,7 @@ sudo cp build/native/nativeCompile/idea-juggler /usr/local/bin/
 The tool will auto-detect IntelliJ, but you can set the path explicitly:
 
 ```bash
-idea-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
+project-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
 ```
 
 ### 2. Configure Base VM Options (Optional)
@@ -73,13 +73,13 @@ Point to your Toolbox's VM options file to copy base settings:
 
 ```bash
 # macOS (Toolbox)
-idea-juggler config --base-vmoptions ~/Library/Application\ Support/JetBrains/IntelliJIdea2024.3/idea.vmoptions
+project-juggler config --base-vmoptions ~/Library/Application\ Support/JetBrains/IntelliJIdea2024.3/idea.vmoptions
 
 # Linux (Toolbox)
-idea-juggler config --base-vmoptions ~/.config/JetBrains/IntelliJIdea2024.3/idea.vmoptions
+project-juggler config --base-vmoptions ~/.config/JetBrains/IntelliJIdea2024.3/idea.vmoptions
 
 # Windows (Toolbox)
-idea-juggler config --base-vmoptions %USERPROFILE%\.config\JetBrains\IntelliJIdea2024.3\idea.vmoptions
+project-juggler config --base-vmoptions %USERPROFILE%\.config\JetBrains\IntelliJIdea2024.3\idea.vmoptions
 ```
 
 **Note:** Config and plugins directories are auto-detected by default.
@@ -87,7 +87,7 @@ idea-juggler config --base-vmoptions %USERPROFILE%\.config\JetBrains\IntelliJIde
 ### 3. Open a Project
 
 ```bash
-idea-juggler open ~/projects/my-app
+project-juggler open ~/projects/my-app
 ```
 
 That's it! IntelliJ will launch with isolated configuration for this project.
@@ -99,9 +99,9 @@ That's it! IntelliJ will launch with isolated configuration for this project.
 Open a project with a dedicated IntelliJ instance.
 
 ```bash
-idea-juggler open ~/projects/my-app
-idea-juggler open /path/to/project
-idea-juggler open .  # Open current directory
+project-juggler open ~/projects/my-app
+project-juggler open /path/to/project
+project-juggler open .  # Open current directory
 ```
 
 **What happens:**
@@ -118,9 +118,9 @@ idea-juggler open .  # Open current directory
 List all tracked projects.
 
 ```bash
-idea-juggler list
-idea-juggler list --verbose  # Show additional details
-idea-juggler list -v         # Short form
+project-juggler list
+project-juggler list --verbose  # Show additional details
+project-juggler list -v         # Short form
 ```
 
 **Output:**
@@ -143,9 +143,9 @@ Tracked projects (3):
 Show recently opened projects with interactive selection.
 
 ```bash
-idea-juggler recent
-idea-juggler recent --limit 5  # Show only 5 most recent
-idea-juggler recent -n 5       # Short form
+project-juggler recent
+project-juggler recent --limit 5  # Show only 5 most recent
+project-juggler recent -n 5       # Short form
 ```
 
 **Interactive Selection:**
@@ -168,21 +168,21 @@ Synchronize project settings with base settings.
 
 ```bash
 # Sync all settings (vmoptions, config, plugins) by project ID
-idea-juggler sync --id a1b2c3d4e5f6g7h8
-idea-juggler sync -i a1b2c3d4e5f6g7h8  # Short form
+project-juggler sync --id a1b2c3d4e5f6g7h8
+project-juggler sync -i a1b2c3d4e5f6g7h8  # Short form
 
 # Sync all settings by project path
-idea-juggler sync --path ~/projects/my-app
-idea-juggler sync -p ~/projects/my-app  # Short form
+project-juggler sync --path ~/projects/my-app
+project-juggler sync -p ~/projects/my-app  # Short form
 
 # Sync only VM options
-idea-juggler sync -i a1b2c3d4e5f6g7h8 --vmoptions
+project-juggler sync -i a1b2c3d4e5f6g7h8 --vmoptions
 
 # Sync only config and plugins
-idea-juggler sync -p ~/projects/my-app --config --plugins
+project-juggler sync -p ~/projects/my-app --config --plugins
 
 # Force sync all settings
-idea-juggler sync -i a1b2c3d4e5f6g7h8 --all
+project-juggler sync -i a1b2c3d4e5f6g7h8 --all
 ```
 
 **Options:**
@@ -214,16 +214,16 @@ Clean up configuration folders for a project.
 
 ```bash
 # By project ID
-idea-juggler clean --id a1b2c3d4e5f6g7h8
-idea-juggler clean -i a1b2c3d4e5f6g7h8  # Short form
+project-juggler clean --id a1b2c3d4e5f6g7h8
+project-juggler clean -i a1b2c3d4e5f6g7h8  # Short form
 
 # By project path
-idea-juggler clean --path ~/projects/my-app
-idea-juggler clean -p ~/projects/my-app  # Short form
+project-juggler clean --path ~/projects/my-app
+project-juggler clean -p ~/projects/my-app  # Short form
 
 # Skip confirmation prompt
-idea-juggler clean -i a1b2c3d4e5f6g7h8 --force
-idea-juggler clean -p ~/projects/my-app -f  # Short form
+project-juggler clean -i a1b2c3d4e5f6g7h8 --force
+project-juggler clean -p ~/projects/my-app -f  # Short form
 ```
 
 **Options:**
@@ -232,11 +232,11 @@ idea-juggler clean -p ~/projects/my-app -f  # Short form
 - `-f, --force` - Skip confirmation prompt
 
 **What gets deleted:**
-- Config directory (`~/.idea-juggler/projects/<id>/config`)
-- System directory (`~/.idea-juggler/projects/<id>/system`)
-- Logs directory (`~/.idea-juggler/projects/<id>/logs`)
-- Plugins directory (`~/.idea-juggler/projects/<id>/plugins`)
-- VM options file (`~/.idea-juggler/projects/<id>/idea.vmoptions`)
+- Config directory (`~/.project-juggler/projects/<id>/config`)
+- System directory (`~/.project-juggler/projects/<id>/system`)
+- Logs directory (`~/.project-juggler/projects/<id>/logs`)
+- Plugins directory (`~/.project-juggler/projects/<id>/plugins`)
+- VM options file (`~/.project-juggler/projects/<id>/idea.vmoptions`)
 - Project metadata
 - Recent projects entry
 
@@ -246,19 +246,19 @@ Configure global settings.
 
 ```bash
 # Show current configuration
-idea-juggler config --show
+project-juggler config --show
 
 # Set IntelliJ path
-idea-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
+project-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
 
 # Set base VM options file
-idea-juggler config --base-vmoptions ~/.config/JetBrains/IntelliJIdea2024.3/idea.vmoptions
+project-juggler config --base-vmoptions ~/.config/JetBrains/IntelliJIdea2024.3/idea.vmoptions
 
 # Set base config directory
-idea-juggler config --base-config ~/.config/JetBrains/IntelliJIdea2024.3
+project-juggler config --base-config ~/.config/JetBrains/IntelliJIdea2024.3
 
 # Set base plugins directory
-idea-juggler config --base-plugins ~/.config/JetBrains/IntelliJIdea2024.3/plugins
+project-juggler config --base-plugins ~/.config/JetBrains/IntelliJIdea2024.3/plugins
 ```
 
 **Options:**
@@ -278,7 +278,7 @@ Current configuration:
   Base plugins:        /Users/max/Library/Application Support/JetBrains/IntelliJIdea2026.1/plugins
   Max recent projects: 10
 
-Configuration file: /Users/max/.idea-juggler/config.json
+Configuration file: /Users/max/.project-juggler/config.json
 ```
 
 ## How It Works
@@ -292,13 +292,13 @@ Each project is identified by a stable SHA-256 hash (first 16 characters) of its
 
 ### VM Options Management
 
-idea-juggler creates per-project `.vmoptions` files that preserve your manual edits:
+project-juggler creates per-project `.vmoptions` files that preserve your manual edits:
 
 **On First Open:**
 1. Copies your base VM options file (if configured)
 2. Filters out any existing `-Didea.*.path` properties
 3. Appends project-specific directory overrides
-4. Saves to `~/.idea-juggler/projects/<project-id>/idea.vmoptions`
+4. Saves to `~/.project-juggler/projects/<project-id>/idea.vmoptions`
 
 **On Subsequent Opens:**
 1. Only updates the `-Didea.*.path` override section
@@ -307,13 +307,13 @@ idea-juggler creates per-project `.vmoptions` files that preserve your manual ed
 **To Update from Base:**
 ```bash
 # When base VM options change, you'll see a note:
-# "Note: Base VM options have changed. Use 'idea-juggler sync <project>' to update."
+# "Note: Base VM options have changed. Use 'project-juggler sync <project>' to update."
 
 # Sync specific project
-idea-juggler sync --path ~/projects/my-app --vmoptions
+project-juggler sync --path ~/projects/my-app --vmoptions
 
 # Or sync all settings
-idea-juggler sync -p ~/projects/my-app
+project-juggler sync -p ~/projects/my-app
 ```
 
 Example generated file:
@@ -327,11 +327,11 @@ Example generated file:
 # Your custom edits here are preserved
 -Xmx4096m  # You added this for a large project
 
-# idea-juggler overrides (auto-generated)
--Didea.config.path=/Users/max/.idea-juggler/projects/a1b2c3d4e5f6g7h8/config
--Didea.system.path=/Users/max/.idea-juggler/projects/a1b2c3d4e5f6g7h8/system
--Didea.log.path=/Users/max/.idea-juggler/projects/a1b2c3d4e5f6g7h8/logs
--Didea.plugins.path=/Users/max/.idea-juggler/projects/a1b2c3d4e5f6g7h8/plugins
+# project-juggler overrides (auto-generated)
+-Didea.config.path=/Users/max/.project-juggler/projects/a1b2c3d4e5f6g7h8/config
+-Didea.system.path=/Users/max/.project-juggler/projects/a1b2c3d4e5f6g7h8/system
+-Didea.log.path=/Users/max/.project-juggler/projects/a1b2c3d4e5f6g7h8/logs
+-Didea.plugins.path=/Users/max/.project-juggler/projects/a1b2c3d4e5f6g7h8/plugins
 ```
 
 ### Config and Plugins Synchronization
@@ -354,7 +354,7 @@ Example generated file:
 ## Directory Structure
 
 ```
-~/.idea-juggler/
+~/.project-juggler/
 ├── config.json                          # Global configuration
 ├── recent.json                          # Recent projects index
 └── projects/
@@ -371,7 +371,7 @@ Example generated file:
 
 ## Configuration Files
 
-### Global Config (`~/.idea-juggler/config.json`)
+### Global Config (`~/.project-juggler/config.json`)
 
 ```json
 {
@@ -384,7 +384,7 @@ Example generated file:
 }
 ```
 
-### Project Metadata (`~/.idea-juggler/projects/<id>/metadata.json`)
+### Project Metadata (`~/.project-juggler/projects/<id>/metadata.json`)
 
 ```json
 {
@@ -401,11 +401,11 @@ Example generated file:
 
 ### IntelliJ Not Found
 
-If idea-juggler can't find IntelliJ:
+If project-juggler can't find IntelliJ:
 
 ```bash
 # Set the path explicitly
-idea-juggler config --intellij-path /path/to/intellij
+project-juggler config --intellij-path /path/to/intellij
 ```
 
 Common paths:
@@ -417,14 +417,14 @@ Common paths:
 
 1. Check the base file path:
    ```bash
-   idea-juggler config --show
+   project-juggler config --show
    ```
 
 2. Verify the file exists and is readable
 
 3. Sync project settings:
    ```bash
-   idea-juggler sync --path ~/projects/my-app --vmoptions
+   project-juggler sync --path ~/projects/my-app --vmoptions
    ```
 
 ### Projects Not Isolated
@@ -435,12 +435,12 @@ If projects seem to share configurations:
 2. Verify IntelliJ is actually using the custom directories:
    ```bash
    # Check the generated VM options file
-   cat ~/.idea-juggler/projects/<project-id>/idea.vmoptions
+   cat ~/.project-juggler/projects/<project-id>/idea.vmoptions
    ```
 
 3. Look for IntelliJ startup errors in:
    ```bash
-   ~/.idea-juggler/projects/<project-id>/logs/idea.log
+   ~/.project-juggler/projects/<project-id>/logs/idea.log
    ```
 
 ### Sync Not Working
@@ -449,18 +449,18 @@ If sync command fails:
 
 1. For VM options sync, ensure base-vmoptions is configured:
    ```bash
-   idea-juggler config --base-vmoptions <path>
+   project-juggler config --base-vmoptions <path>
    ```
 
 2. For config/plugins sync, paths are auto-detected but you can configure them:
    ```bash
-   idea-juggler config --base-config <path>
-   idea-juggler config --base-plugins <path>
+   project-juggler config --base-config <path>
+   project-juggler config --base-plugins <path>
    ```
 
 3. Check what paths will be used:
    ```bash
-   idea-juggler config --show
+   project-juggler config --show
    ```
 
 ### Permission Errors
@@ -469,8 +469,8 @@ If you get permission errors:
 
 ```bash
 # Ensure the base directory exists and is writable
-mkdir -p ~/.idea-juggler
-chmod 755 ~/.idea-juggler
+mkdir -p ~/.project-juggler
+chmod 755 ~/.project-juggler
 ```
 
 ## Advanced Usage
@@ -481,10 +481,10 @@ You can switch between different IntelliJ installations:
 
 ```bash
 # Use Community Edition
-idea-juggler config --intellij-path /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea
+project-juggler config --intellij-path /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea
 
 # Use Ultimate Edition
-idea-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
+project-juggler config --intellij-path /Applications/IntelliJ\ IDEA.app/Contents/MacOS/idea
 ```
 
 ### Custom VM Options Per Project
@@ -493,11 +493,11 @@ You can manually edit project VM options and they'll be preserved:
 
 ```bash
 # Edit the generated file
-vim ~/.idea-juggler/projects/<project-id>/idea.vmoptions
+vim ~/.project-juggler/projects/<project-id>/idea.vmoptions
 
 # Add custom options - they won't be overwritten on subsequent opens
-echo "-Xmx4096m" >> ~/.idea-juggler/projects/<project-id>/idea.vmoptions
-echo "-Dmy.custom.property=value" >> ~/.idea-juggler/projects/<project-id>/idea.vmoptions
+echo "-Xmx4096m" >> ~/.project-juggler/projects/<project-id>/idea.vmoptions
+echo "-Dmy.custom.property=value" >> ~/.project-juggler/projects/<project-id>/idea.vmoptions
 ```
 
 **Note:** Only the `-Didea.*.path` override section is automatically updated. All other edits are preserved.
@@ -506,29 +506,29 @@ echo "-Dmy.custom.property=value" >> ~/.idea-juggler/projects/<project-id>/idea.
 
 ```bash
 # Update only VM options when base file changes
-idea-juggler sync -p ~/my-project --vmoptions
+project-juggler sync -p ~/my-project --vmoptions
 
 # Update only plugins (e.g., after installing a new plugin in base IntelliJ)
-idea-juggler sync -i abc123 --plugins
+project-juggler sync -i abc123 --plugins
 
 # Update only config (e.g., after changing code style settings)
-idea-juggler sync -i abc123 --config
+project-juggler sync -i abc123 --config
 
 # Update everything
-idea-juggler sync -p ~/my-project --all
+project-juggler sync -p ~/my-project --all
 ```
 
 ### Bulk Operations
 
 ```bash
 # Sync all projects (iterate through list)
-idea-juggler list | grep "ID:" | awk '{print $2}' | while read id; do
-    idea-juggler sync --id $id
+project-juggler list | grep "ID:" | awk '{print $2}' | while read id; do
+    project-juggler sync --id $id
 done
 
 # Clean all projects older than X days (manual script)
-find ~/.idea-juggler/projects -type d -mtime +90 -exec basename {} \; | while read id; do
-    idea-juggler clean --id $id --force
+find ~/.project-juggler/projects -type d -mtime +90 -exec basename {} \; | while read id; do
+    project-juggler clean --id $id --force
 done
 ```
 
@@ -592,7 +592,7 @@ The project includes comprehensive unit and integration tests:
 ./gradlew test --info
 
 # Run a specific test class
-./gradlew test --tests "com.ideajuggler.core.ProjectIdGeneratorTest"
+./gradlew test --tests "com.projectjuggler.core.ProjectIdGeneratorTest"
 ```
 
 **Test Coverage:**
@@ -624,7 +624,7 @@ The project includes comprehensive unit and integration tests:
 # Build Homebrew distribution
 ./gradlew :cli:homebrewDist
 
-# Output: cli/build/distributions/idea-juggler-<version>.tar.gz
+# Output: cli/build/distributions/project-juggler-<version>.tar.gz
 # Size: ~2.2 MB (no heavy dependencies)
 
 # Generate checksum for Homebrew formula
@@ -638,7 +638,7 @@ The project includes comprehensive unit and integration tests:
 ./gradlew nativeCompile
 
 # Binary will be at:
-# build/native/nativeCompile/idea-juggler
+# build/native/nativeCompile/project-juggler
 ```
 
 ## Contributing

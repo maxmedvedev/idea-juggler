@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>maxmedvedev.project-juggler</id>d>
+    <id>maxmedvedev.project-juggler</id>
     <name>Project Juggler</name>
     <vendor>Max Medvedev</vendor>
 
@@ -16,32 +16,32 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.IdeaJugglerBundle</resource-bundle>
+    <resource-bundle>messages.ProjectJugglerBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <notificationGroup id="idea-juggler.notifications" displayType="BALLOON" bundle="messages.IdeaJugglerBundle"
-                           key="notification.group.idea-juggler.notifications"/>
+        <notificationGroup id="project-juggler.notifications" displayType="BALLOON" bundle="messages.ProjectJugglerBundle"
+                           key="notification.group.project-juggler.notifications"/>
     </extensions>
 
-    <actions resource-bundle="messages.IdeaJugglerBundle">
-        <action id="com.ideajuggler.plugin.OpenWithIdeaJuggler"
-                class="com.ideajuggler.plugin.actions.OpenWithIdeaJugglerAction"
+    <actions resource-bundle="messages.ProjectJugglerBundle">
+        <action id="com.projectjuggler.plugin.OpenWithProjectJuggler"
+                class="com.projectjuggler.plugin.actions.OpenWithProjectJugglerAction"
                 icon="AllIcons.Actions.Execute">
             <add-to-group group-id="FileMenu" anchor="after" relative-to-action="OpenFile"/>
         </action>
-        <action id="com.ideajuggler.plugin.ShowRecentProjects"
-                class="com.ideajuggler.plugin.actions.ShowRecentProjectsAction"
+        <action id="com.projectjuggler.plugin.ShowRecentProjects"
+                class="com.projectjuggler.plugin.actions.ShowRecentProjectsAction"
                 icon="AllIcons.Actions.Search">
             <add-to-group group-id="FileMenu" anchor="after"
-                          relative-to-action="com.ideajuggler.plugin.OpenWithIdeaJuggler"/>
+                          relative-to-action="com.projectjuggler.plugin.OpenWithProjectJuggler"/>
             <keyboard-shortcut keymap="$default" first-keystroke="meta shift P"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift P"/>
         </action>
 
-        <action id="com.ideajuggler.plugin.OpenProjectCopy"
-                class="com.ideajuggler.plugin.actions.OpenProjectCopyAction"
+        <action id="com.projectjuggler.plugin.OpenProjectCopy"
+                class="com.projectjuggler.plugin.actions.OpenProjectCopyAction"
                 icon="AllIcons.Actions.Copy">
-            <add-to-group group-id="FileMenu" anchor="after" relative-to-action="com.ideajuggler.plugin.OpenWithIdeaJuggler"/>
+            <add-to-group group-id="FileMenu" anchor="after" relative-to-action="com.projectjuggler.plugin.OpenWithProjectJuggler"/>
         </action>
     </actions>
 </idea-plugin>

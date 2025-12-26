@@ -19,8 +19,8 @@ tasks.test {
 }
 
 application {
-    mainClass.set("com.ideajuggler.MainKt")
-    applicationName = "idea-juggler"
+    mainClass.set("com.projectjuggler.MainKt")
+    applicationName = "project-juggler"
 }
 
 // Reproducible builds for Homebrew
@@ -46,10 +46,10 @@ val generateVersion by tasks.registering {
     outputs.dir(outputDir)
 
     doLast {
-        val versionFile = outputDir.get().asFile.resolve("com/ideajuggler/Version.kt")
+        val versionFile = outputDir.get().asFile.resolve("com/projectjuggler/Version.kt")
         versionFile.parentFile.mkdirs()
         versionFile.writeText("""
-            package com.ideajuggler
+            package com.projectjuggler
 
             internal const val CLI_VERSION = "${project.version}"
         """.trimIndent())
@@ -69,14 +69,14 @@ val homebrewDist by tasks.registering(Tar::class) {
     description = "Creates a Homebrew-compatible distribution"
     group = "distribution"
 
-    archiveBaseName.set("idea-juggler")
+    archiveBaseName.set("project-juggler")
     archiveVersion.set(project.version.toString())
     archiveExtension.set("tar.gz")
     compression = Compression.GZIP
 
     dependsOn("jar")
 
-    into("idea-juggler-${project.version}") {
+    into("project-juggler-${project.version}") {
         // JARs in libexec/
         into("libexec") {
             from(tasks.named("jar"))
@@ -85,8 +85,8 @@ val homebrewDist by tasks.registering(Tar::class) {
 
         // Shell script in bin/
         into("bin") {
-            from("src/main/resources/idea-juggler.sh") {
-                rename { "idea-juggler" }
+            from("src/main/resources/project-juggler.sh") {
+                rename { "project-juggler" }
                 fileMode = 0b111101101  // 0755 (executable)
             }
         }

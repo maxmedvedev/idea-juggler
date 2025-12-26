@@ -1,4 +1,4 @@
-rootProject.name = "idea-juggler"
+rootProject.name = "project-juggler"
 
 include("core")
 include("cli")

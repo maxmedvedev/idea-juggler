@@ -19,7 +19,7 @@ echo "Building distribution..."
 ./gradlew clean :cli:homebrewDist :cli:homebrewChecksum
 
 # Get paths
-DIST_FILE="cli/build/distributions/idea-juggler-${VERSION}.tar.gz"
+DIST_FILE="cli/build/distributions/project-juggler-${VERSION}.tar.gz"
 CHECKSUM_FILE="${DIST_FILE}.sha256"
 
 if [ ! -f "$DIST_FILE" ]; then
@@ -35,28 +35,28 @@ echo ""
 echo "Testing distribution..."
 TEMP_DIR=$(mktemp -d)
 tar -xzf "$DIST_FILE" -C "$TEMP_DIR"
-EXTRACTED_DIR="$TEMP_DIR/idea-juggler-$VERSION"
+EXTRACTED_DIR="$TEMP_DIR/project-juggler-$VERSION"
 
 # Check structure
-if [ ! -f "$EXTRACTED_DIR/bin/idea-juggler" ]; then
-    echo "Error: bin/idea-juggler not found in distribution!" >&2
+if [ ! -f "$EXTRACTED_DIR/bin/project-juggler" ]; then
+    echo "Error: bin/project-juggler not found in distribution!" >&2
     exit 1
 fi
 
-if [ ! -x "$EXTRACTED_DIR/bin/idea-juggler" ]; then
-    echo "Error: bin/idea-juggler is not executable!" >&2
+if [ ! -x "$EXTRACTED_DIR/bin/project-juggler" ]; then
+    echo "Error: bin/project-juggler is not executable!" >&2
     exit 1
 fi
 
 # Test script syntax
-if ! bash -n "$EXTRACTED_DIR/bin/idea-juggler"; then
+if ! bash -n "$EXTRACTED_DIR/bin/project-juggler"; then
     echo "Error: Shell script has syntax errors!" >&2
     exit 1
 fi
 
 # Test help command (if Java available)
 if command -v java >/dev/null 2>&1; then
-    if ! "$EXTRACTED_DIR/bin/idea-juggler" --help >/dev/null 2>&1; then
+    if ! "$EXTRACTED_DIR/bin/project-juggler" --help >/dev/null 2>&1; then
         echo "Warning: Script execution test failed (Java may not be configured)" >&2
     fi
 fi
@@ -76,6 +76,6 @@ echo "1. Create a git tag: git tag v$VERSION"
 echo "2. Push tag: git push origin v$VERSION"
 echo "3. Create GitHub release and attach $DIST_FILE"
 echo "4. Update Homebrew formula with:"
-echo "   url: https://github.com/YOUR_USERNAME/idea-juggler/releases/download/v$VERSION/idea-juggler-$VERSION.tar.gz"
+echo "   url: https://github.com/YOUR_USERNAME/project-juggler/releases/download/v$VERSION/project-juggler-$VERSION.tar.gz"
 echo "   sha256: $CHECKSUM"
 echo "============================================"

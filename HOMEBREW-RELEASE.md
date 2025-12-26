@@ -1,6 +1,6 @@
 # Homebrew Distribution Setup
 
-This document describes the Homebrew distribution setup for idea-juggler.
+This document describes the Homebrew distribution setup for project-juggler.
 
 ## What Was Created
 
@@ -8,7 +8,7 @@ This document describes the Homebrew distribution setup for idea-juggler.
 - **cli/build.gradle.kts**: Added reproducible build settings and custom tasks
   - `homebrewDist`: Creates a Homebrew-compatible tar.gz distribution
   - `homebrewChecksum`: Generates SHA256 checksum for the distribution
-  - Application name changed from "cli" to "idea-juggler"
+  - Application name changed from "cli" to "project-juggler"
 
 - **build.gradle.kts**: Added reproducible build settings for all subprojects
 
@@ -26,7 +26,7 @@ This document describes the Homebrew distribution setup for idea-juggler.
   - Includes installation instructions in release notes
 
 ### 4. Homebrew Tap Templates
-- **homebrew-tap-template/Formula/idea-juggler.rb**: Homebrew formula
+- **homebrew-tap-template/Formula/project-juggler.rb**: Homebrew formula
 - **homebrew-tap-template/README.md**: Tap repository documentation
 - **homebrew-tap-template/SETUP.md**: Instructions for setting up the tap
 
@@ -38,7 +38,7 @@ This document describes the Homebrew distribution setup for idea-juggler.
 The `homebrewDist` task creates a tar.gz file with this structure:
 
 ```
-idea-juggler-1.0.0/
+project-juggler-1.0.0/
 └── libexec/
     ├── cli.jar              # Main application JAR
     ├── core.jar             # Core module
@@ -47,14 +47,14 @@ idea-juggler-1.0.0/
 
 The Homebrew formula installs this to:
 ```
-/usr/local/Cellar/idea-juggler/1.0.0/
+/usr/local/Cellar/project-juggler/1.0.0/
 └── libexec/
     └── [all JARs]
 ```
 
 And creates a wrapper script at:
 ```
-/usr/local/bin/idea-juggler
+/usr/local/bin/project-juggler
 ```
 
 ## How to Use
@@ -70,9 +70,9 @@ ls -lh cli/build/distributions/
 
 # Verify reproducibility
 ./gradlew clean :cli:homebrewDist
-shasum -a 256 cli/build/distributions/idea-juggler-*.tar.gz > /tmp/checksum1.txt
+shasum -a 256 cli/build/distributions/project-juggler-*.tar.gz > /tmp/checksum1.txt
 ./gradlew clean :cli:homebrewDist
-shasum -a 256 cli/build/distributions/idea-juggler-*.tar.gz > /tmp/checksum2.txt
+shasum -a 256 cli/build/distributions/project-juggler-*.tar.gz > /tmp/checksum2.txt
 diff /tmp/checksum1.txt /tmp/checksum2.txt  # Should be identical
 ```
 
@@ -117,10 +117,10 @@ git push origin v1.0.1
 2. Copy the template files:
 ```bash
 cd /path/to/new/homebrew-tap-repo
-cp -r /path/to/idea-juggler/homebrew-tap-template/* .
+cp -r /path/to/project-juggler/homebrew-tap-template/* .
 ```
 
-3. Update placeholders in `Formula/idea-juggler.rb`:
+3. Update placeholders in `Formula/project-juggler.rb`:
    - Replace `YOUR_USERNAME` with your GitHub username
    - Replace `PUT_CHECKSUM_HERE` with the SHA256 from your first release
    - Update the license if needed
@@ -128,7 +128,7 @@ cp -r /path/to/idea-juggler/homebrew-tap-template/* .
 4. Commit and push:
 ```bash
 git add .
-git commit -m "Initial commit: Homebrew formula for idea-juggler"
+git commit -m "Initial commit: Homebrew formula for project-juggler"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/homebrew-tap.git
 git push -u origin main
@@ -138,16 +138,16 @@ git push -u origin main
 
 When you release a new version:
 
-1. Update `Formula/idea-juggler.rb`:
+1. Update `Formula/project-juggler.rb`:
 ```ruby
-url "https://github.com/YOUR_USERNAME/idea-juggler/releases/download/v1.0.1/idea-juggler-1.0.1.tar.gz"
+url "https://github.com/YOUR_USERNAME/project-juggler/releases/download/v1.0.1/project-juggler-1.0.1.tar.gz"
 sha256 "new_checksum_here"
 ```
 
 2. Commit and push:
 ```bash
-git add Formula/idea-juggler.rb
-git commit -m "Update idea-juggler to v1.0.1"
+git add Formula/project-juggler.rb
+git commit -m "Update project-juggler to v1.0.1"
 git push
 ```
 
@@ -157,14 +157,14 @@ git push
 # Add your tap
 brew tap YOUR_USERNAME/tap
 
-# Install idea-juggler
-brew install idea-juggler
+# Install project-juggler
+brew install project-juggler
 
 # Test it
-idea-juggler --help
+project-juggler --help
 
 # Uninstall (for testing)
-brew uninstall idea-juggler
+brew uninstall project-juggler
 ```
 
 ## Reproducible Builds

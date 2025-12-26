@@ -36,21 +36,21 @@ jobs:
       - name: Read checksum
         id: checksum
         run: |
-          CHECKSUM=$(cat cli/build/distributions/idea-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz.sha256 | cut -d' ' -f1)
+          CHECKSUM=$(cat cli/build/distributions/project-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz.sha256 | cut -d' ' -f1)
           echo "sha256=$CHECKSUM" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            cli/build/distributions/idea-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz
-            cli/build/distributions/idea-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz.sha256
+            cli/build/distributions/project-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz
+            cli/build/distributions/project-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz.sha256
           body: |
             ## Installation via Homebrew
 
             ```bash
             brew tap YOUR_USERNAME/homebrew-tap
-            brew install idea-juggler
+            brew install project-juggler
             ```
 
             ## Manual Installation
@@ -58,11 +58,11 @@ jobs:
             Download and extract:
 
             ```bash
-            tar -xzf idea-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz
-            cd idea-juggler-${{ steps.get_version.outputs.VERSION }}
-            sudo cp bin/idea-juggler /usr/local/bin/
-            sudo mkdir -p /usr/local/libexec/idea-juggler
-            sudo cp -r libexec/* /usr/local/libexec/idea-juggler/
+            tar -xzf project-juggler-${{ steps.get_version.outputs.VERSION }}.tar.gz
+            cd project-juggler-${{ steps.get_version.outputs.VERSION }}
+            sudo cp bin/project-juggler /usr/local/bin/
+            sudo mkdir -p /usr/local/libexec/project-juggler
+            sudo cp -r libexec/* /usr/local/libexec/project-juggler/
             ```
 
             **SHA256:** `${{ steps.checksum.outputs.sha256 }}`
