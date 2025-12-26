@@ -43,6 +43,18 @@ internal class RecentProjectsPopup(
                 list.selectedValue?.let { launchProject(it) }
             })
             .setFilterAlwaysVisible(true)
+            .setNamerForFiltering { item ->
+                // Return searchable text: project name, branch, and path
+                buildString {
+                    append(item.metadata.name)
+                    append(" ")
+                    item.gitBranch?.let {
+                        append(it)
+                        append(" ")
+                    }
+                    append(item.metadata.path.pathString)
+                }
+            }
             .createPopup()
 
         popup.showInFocusCenter()
