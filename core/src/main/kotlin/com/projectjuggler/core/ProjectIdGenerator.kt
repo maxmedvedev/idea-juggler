@@ -6,8 +6,7 @@ import com.projectjuggler.util.HashUtils
 
 object ProjectIdGenerator {
     fun generate(projectPath: ProjectPath): ProjectId {
-        // Generate SHA-256 hash and take first 16 characters
         val hash = HashUtils.calculateStringHash(projectPath.toString())
-        return ProjectId(hash.take(16))
+        return ProjectId(projectPath.name + "-" + hash.take(16))
     }
 }

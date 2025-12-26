@@ -46,7 +46,8 @@ class ProjectManagerTest : StringSpec({
 
             val resolvedProjectPath = projectManager.resolvePath(projectDir.toString())
             resolvedProjectPath shouldNotBe null
-            resolvedProjectPath.id.id.length shouldBe 16 // SHA-256 hash truncated to 16 chars
+            // ID format is now projectname-hash16chars
+            resolvedProjectPath.id.id.substringAfterLast("-").length shouldBe 16 // hash truncated to 16 chars
 
         } finally {
             baseDir.toFile().deleteRecursively()

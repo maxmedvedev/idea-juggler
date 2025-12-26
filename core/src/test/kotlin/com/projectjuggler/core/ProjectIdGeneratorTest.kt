@@ -23,12 +23,14 @@ class ProjectIdGeneratorTest : StringSpec({
         }
     }
 
-    "should generate 16-character IDs" {
+    "should generate IDs in format projectname-hash" {
         val tempDir = createTempDirectory("test-project")
         try {
             val projectPath = ProjectPath(tempDir.toString())
             val id = ProjectIdGenerator.generate(projectPath)
-            id.id shouldHaveLength 16
+            // ID format: projectname-hash16chars
+            id.id shouldBe "${projectPath.name}-${id.id.substringAfterLast("-")}"
+            id.id.substringAfterLast("-") shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
         }
@@ -58,7 +60,7 @@ class ProjectIdGeneratorTest : StringSpec({
             val projectPath = ProjectPath(absolutePath.toString())
             val id = ProjectIdGenerator.generate(projectPath)
 
-            id.id shouldHaveLength 16
+            id.id.substringAfterLast("-") shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
         }
@@ -89,7 +91,7 @@ class ProjectIdGeneratorTest : StringSpec({
         try {
             val projectPath = ProjectPath(tempDir.toString())
             val id = ProjectIdGenerator.generate(projectPath)
-            id.id shouldHaveLength 16
+            id.id.substringAfterLast("-") shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
         }
@@ -100,7 +102,7 @@ class ProjectIdGeneratorTest : StringSpec({
         try {
             val projectPath = ProjectPath(tempDir.toString())
             val id = ProjectIdGenerator.generate(projectPath)
-            id.id shouldHaveLength 16
+            id.id.substringAfterLast("-") shouldHaveLength 16
         } finally {
             tempDir.toFile().deleteRecursively()
         }
@@ -111,6 +113,6 @@ class ProjectIdGeneratorTest : StringSpec({
         val projectPath = ProjectPath(nonExistentPath.toString())
         val id = ProjectIdGenerator.generate(projectPath)
 
-        id.id shouldHaveLength 16
+        id.id.substringAfterLast("-") shouldHaveLength 16
     }
 })
