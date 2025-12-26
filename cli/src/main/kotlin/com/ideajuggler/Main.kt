@@ -6,7 +6,7 @@ import com.ideajuggler.cli.framework.CliApp
 fun main(args: Array<String>) {
     val app = CliApp(
         name = "idea-juggler",
-        version = "0.0.2",
+        version = "0.0.3",
         commands = listOf(
             OpenCommand(),
             ListCommand(),
