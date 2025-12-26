@@ -35,7 +35,7 @@ class IntelliJLauncher(
 
         // 5. Launch IntelliJ with custom VM options
         val environment = mapOf("IDEA_VM_OPTIONS" to vmOptionsFile.toString())
-        ProcessLauncher.launch(intellijPath, listOf(project.path.toString()), environment)
+        ProcessLauncher.launch(intellijPath, listOf(project.path.pathString), environment)
 
         println("Launched IntelliJ IDEA for project: ${project.name}")
         println("Project ID: ${project.id}")
