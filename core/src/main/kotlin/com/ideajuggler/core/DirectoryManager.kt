@@ -49,7 +49,7 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
     /**
      * Get the base plugins directory from config or auto-detect.
      */
-    private fun getBasePluginsPath(): Path? {
+    fun getBasePluginsPath(): Path? {
         val config = configRepository.load()
 
         // Use configured path if available
@@ -72,7 +72,7 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
     /**
      * Get the base config directory from config or auto-detect.
      */
-    private fun getBaseConfigPath(): Path? {
+    fun getBaseConfigPath(): Path? {
         val config = configRepository.load()
 
         // Use configured path if available
@@ -82,6 +82,28 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
 
         // Otherwise, try to auto-detect
         return ConfigLocator.findDefaultConfigDirectory()
+    }
+
+    /**
+     * Force sync config from base location, overwriting existing config
+     */
+    fun syncConfigFromBase(projectId: String) {
+        val baseConfigPath = getBaseConfigPath() ?: throw IllegalStateException(
+            "Base config path not found. Either configure it using 'idea-juggler config --base-config <path>' or ensure IntelliJ is installed with default paths."
+        )
+        val projectDirs = ensureProjectDirectories(projectId)
+        DirectoryCopier.copy(baseConfigPath, projectDirs.config)
+    }
+
+    /**
+     * Force sync plugins from base location, overwriting existing plugins
+     */
+    fun syncPluginsFromBase(projectId: String) {
+        val basePluginsPath = getBasePluginsPath() ?: throw IllegalStateException(
+            "Base plugins path not found. Either configure it using 'idea-juggler config --base-plugins <path>' or ensure IntelliJ is installed with default paths."
+        )
+        val projectDirs = ensureProjectDirectories(projectId)
+        DirectoryCopier.copy(basePluginsPath, projectDirs.plugins)
     }
 
     fun cleanProject(projectId: String) {

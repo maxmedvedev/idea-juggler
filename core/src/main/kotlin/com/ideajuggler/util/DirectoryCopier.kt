@@ -37,6 +37,22 @@ object DirectoryCopier {
     }
 
     /**
+     * Force copy directory contents from source to destination, even if destination is not empty.
+     * This will overwrite existing files.
+     *
+     * @param source Source directory
+     * @param destination Destination directory
+     */
+    fun copy(source: Path, destination: Path) {
+        // Check if source exists and is readable
+        if (!source.exists() || !source.isDirectory()) {
+            throw IllegalArgumentException("Source directory does not exist or is not a directory: $source")
+        }
+
+        copyDirectoryRecursively(source, destination)
+    }
+
+    /**
      * Check if a directory is empty.
      */
     private fun isEmptyDirectory(dir: Path): Boolean {

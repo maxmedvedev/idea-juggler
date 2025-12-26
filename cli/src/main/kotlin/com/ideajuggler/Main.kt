@@ -12,7 +12,8 @@ fun main(args: Array<String>) {
             ListCommand(),
             CleanCommand(),
             ConfigCommand(),
-            RecentCommand()
+            RecentCommand(),
+            SyncCommand()
         )
     )
 

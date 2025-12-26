@@ -9,10 +9,18 @@ object VMOptionsGenerator {
     fun generate(
         baseVmOptionsPath: Path?,
         projectDirectories: ProjectDirectories,
-        debugPort: Int?
+        debugPort: Int?,
+        forceRegenerate: Boolean = false
     ): Path {
         val vmOptionsFile = projectDirectories.root.resolve("idea.vmoptions")
 
+        // If file exists and we're not forcing regeneration, only update the override section
+        if (Files.exists(vmOptionsFile) && !forceRegenerate) {
+            updateOverrides(vmOptionsFile, projectDirectories)
+            return vmOptionsFile
+        }
+
+        // Generate from scratch
         val content = buildString {
             // Include base VM options if provided
             if (baseVmOptionsPath != null && Files.exists(baseVmOptionsPath)) {
@@ -34,6 +42,50 @@ object VMOptionsGenerator {
 
         vmOptionsFile.writeText(content)
         return vmOptionsFile
+    }
+
+    private fun updateOverrides(vmOptionsFile: Path, projectDirectories: ProjectDirectories) {
+        val lines = vmOptionsFile.readLines().toMutableList()
+        var overrideStartIndex = -1
+
+        // Find the start of the override section
+        for (i in lines.indices) {
+            if (lines[i].trim() == "# idea-juggler overrides (auto-generated)") {
+                overrideStartIndex = i
+                break
+            }
+        }
+
+        if (overrideStartIndex == -1) {
+            // Override section doesn't exist, append it
+            lines.add("")
+            lines.add("# idea-juggler overrides (auto-generated)")
+            lines.add("-Didea.config.path=${projectDirectories.config}")
+            lines.add("-Didea.system.path=${projectDirectories.system}")
+            lines.add("-Didea.log.path=${projectDirectories.logs}")
+            lines.add("-Didea.plugins.path=${projectDirectories.plugins}")
+        } else {
+            // Update the override section
+            val newOverrides = listOf(
+                "# idea-juggler overrides (auto-generated)",
+                "-Didea.config.path=${projectDirectories.config}",
+                "-Didea.system.path=${projectDirectories.system}",
+                "-Didea.log.path=${projectDirectories.logs}",
+                "-Didea.plugins.path=${projectDirectories.plugins}"
+            )
+
+            // Remove old override lines
+            var endIndex = overrideStartIndex + 1
+            while (endIndex < lines.size && lines[endIndex].trim().startsWith("-Didea.")) {
+                endIndex++
+            }
+
+            // Replace with new overrides
+            lines.subList(overrideStartIndex, endIndex).clear()
+            lines.addAll(overrideStartIndex, newOverrides)
+        }
+
+        vmOptionsFile.writeText(lines.joinToString("\n") + "\n")
     }
 
     private fun filterBaseOptions(lines: List<String>, debugPort: Int?): List<String> {

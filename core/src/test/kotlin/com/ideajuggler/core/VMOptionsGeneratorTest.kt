@@ -314,25 +314,25 @@ class VMOptionsGeneratorTest : StringSpec({
 
             // Test address=*:PORT format
             baseVmOptions.writeText("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5009")
-            val content1 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort).readText()
+            val content1 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort, forceRegenerate = true).readText()
             content1 shouldContain "address=*:5100"
             content1 shouldNotContain "address=*:5009"
 
             // Test address=PORT format
             baseVmOptions.writeText("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5009")
-            val content2 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort).readText()
+            val content2 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort, forceRegenerate = true).readText()
             content2 shouldContain "address=5100"
             content2 shouldNotContain "address=5009"
 
             // Test address=localhost:PORT format
             baseVmOptions.writeText("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:5009")
-            val content3 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort).readText()
+            val content3 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort, forceRegenerate = true).readText()
             content3 shouldContain "address=localhost:5100"
             content3 shouldNotContain "address=localhost:5009"
 
             // Test address=127.0.0.1:PORT format
             baseVmOptions.writeText("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:5009")
-            val content4 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort).readText()
+            val content4 = VMOptionsGenerator.generate(baseVmOptions, projectDirs, debugPort, forceRegenerate = true).readText()
             content4 shouldContain "address=127.0.0.1:5100"
             content4 shouldNotContain "address=127.0.0.1:5009"
         } finally {

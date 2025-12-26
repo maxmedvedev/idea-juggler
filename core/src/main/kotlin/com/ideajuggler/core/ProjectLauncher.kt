@@ -23,8 +23,7 @@ class ProjectLauncher(
     ) {
         // Check if base VM options changed
         if (baseVMOptionsTracker.hasChanged()) {
-            messageOutput.echo("Base VM options changed, regenerating configurations for all projects...")
-            regenerateAllProjects()
+            messageOutput.echo("Note: Base VM options have changed. Use 'idea-juggler sync <project>' to update project settings.")
             baseVMOptionsTracker.updateHash()
         }
 
@@ -38,25 +37,34 @@ class ProjectLauncher(
         intellijLauncher.launch(projectId, projectPath)
     }
 
-    private fun regenerateAllProjects() {
-        val projects = projectManager.listAll()
-        val baseVmOptionsPath = baseVMOptionsTracker.getBaseVmOptionsPath()
+    /**
+     * Synchronize a project's settings with base settings (vmoptions, config, plugins)
+     */
+    fun syncProject(projectId: String, syncVmOptions: Boolean, syncConfig: Boolean, syncPlugins: Boolean) {
+        val projectDirs = directoryManager.ensureProjectDirectories(projectId)
 
-        projects.forEach { project ->
-            val projectDirs = directoryManager.ensureProjectDirectories(project.id)
-            // Ensure debug port is allocated
-            val debugPort = projectManager.ensureDebugPort(project.id)
+        if (syncVmOptions) {
+            val baseVmOptionsPath = baseVMOptionsTracker.getBaseVmOptionsPath()
+            if (baseVmOptionsPath == null && syncVmOptions) {
+                throw IllegalStateException(
+                    "Base VM options path not configured. Configure it using: idea-juggler config --base-vmoptions <path>"
+                )
+            }
+            val debugPort = projectManager.ensureDebugPort(projectId)
             VMOptionsGenerator.generate(
                 baseVmOptionsPath,
-                ProjectDirectories(
-                    root = projectDirs.root,
-                    config = projectDirs.config,
-                    system = projectDirs.system,
-                    logs = projectDirs.logs,
-                    plugins = projectDirs.plugins
-                ),
-                debugPort
+                projectDirs,
+                debugPort,
+                forceRegenerate = true
             )
+        }
+
+        if (syncConfig) {
+            directoryManager.syncConfigFromBase(projectId)
+        }
+
+        if (syncPlugins) {
+            directoryManager.syncPluginsFromBase(projectId)
         }
     }
 

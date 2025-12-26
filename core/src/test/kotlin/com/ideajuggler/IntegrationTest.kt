@@ -178,7 +178,8 @@ class IntegrationTest : StringSpec({
                         projectDirs.logs,
                         projectDirs.plugins
                     ),
-                    debugPort
+                    debugPort,
+                    forceRegenerate = true
                 )
             }
 
