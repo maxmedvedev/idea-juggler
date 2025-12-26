@@ -1,7 +1,7 @@
 package com.ideajuggler.plugin.ui
 
 import com.ideajuggler.plugin.model.RecentProjectItem
-import com.intellij.icons.AllIcons
+import com.intellij.ide.RecentProjectIconHelper
 import com.intellij.ui.SimpleColoredComponent
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.util.ui.JBUI
@@ -12,6 +12,8 @@ import java.io.File
 import javax.swing.*
 
 internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
+    private val iconHelper = RecentProjectIconHelper()
+
     override fun getListCellRendererComponent(
         list: JList<out RecentProjectItem>,
         value: RecentProjectItem?,
@@ -26,8 +28,13 @@ internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
         val panel = JPanel(BorderLayout())
         panel.border = JBUI.Borders.empty(4, 6)
 
-        // Icon on the left
-        val iconLabel = JLabel(AllIcons.Nodes.Module)
+        // Get project icon using IntelliJ's icon helper
+        val projectIcon = iconHelper.getProjectIcon(
+            path = value.metadata.path.pathString,
+            isProjectValid = true,
+            name = value.metadata.name
+        )
+        val iconLabel = JLabel(projectIcon)
         iconLabel.border = JBUI.Borders.emptyRight(8)
         panel.add(iconLabel, BorderLayout.WEST)
 
