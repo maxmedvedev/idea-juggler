@@ -1,21 +1,27 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.10.5"
+}
+
+repositories {
+    mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
     implementation(project(":core"))
-}
-
-intellij {
-    version.set("2024.1")
-    type.set("IC")
+    intellijPlatform {
+        intellijIdea("2025.3")
+    }
 }
 
 tasks {
     patchPluginXml {
-        sinceBuild.set("241")
+        sinceBuild.set("253")
         untilBuild.set("261.*")
     }
 }
