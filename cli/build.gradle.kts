@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    id("org.graalvm.buildtools.native") version "0.10.0"
     application
 }
 
@@ -20,21 +19,6 @@ application {
     mainClass.set("com.ideajuggler.MainKt")
 }
 
-graalvmNative {
-    binaries {
-        named("main") {
-            imageName.set("idea-juggler")
-            mainClass.set("com.ideajuggler.MainKt")
-            debug.set(false)
-            verbose.set(true)
-            buildArgs.add("--no-fallback")
-            buildArgs.add("-H:+ReportExceptionStackTraces")
-
-            // Optimize for size and startup
-            buildArgs.add("-O3")
-        }
-    }
-}
 
 kotlin {
     jvmToolchain(17)
