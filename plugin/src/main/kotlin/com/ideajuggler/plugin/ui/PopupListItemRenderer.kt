@@ -1,6 +1,10 @@
 package com.ideajuggler.plugin.ui
 
+import com.ideajuggler.plugin.IdeaJugglerBundle
+import com.ideajuggler.plugin.model.OpenFileChooserItem
+import com.ideajuggler.plugin.model.PopupListItem
 import com.ideajuggler.plugin.model.RecentProjectItem
+import com.intellij.icons.AllIcons
 import com.intellij.ide.RecentProjectsManager
 import com.intellij.ide.RecentProjectsManagerBase
 import com.intellij.ui.SimpleColoredComponent
@@ -12,12 +16,12 @@ import java.awt.Component
 import java.io.File
 import javax.swing.*
 
-internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
+internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
     private val recentProjectsManager = RecentProjectsManager.getInstance() as RecentProjectsManagerBase
 
     override fun getListCellRendererComponent(
-        list: JList<out RecentProjectItem>,
-        value: RecentProjectItem?,
+        list: JList<out PopupListItem>,
+        value: PopupListItem?,
         index: Int,
         isSelected: Boolean,
         cellHasFocus: Boolean
@@ -26,8 +30,19 @@ internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
             return JPanel()
         }
 
+        return when (value) {
+            is RecentProjectItem -> renderRecentProject(value, isSelected, cellHasFocus)
+            is OpenFileChooserItem -> renderOpenFileChooser(isSelected, cellHasFocus)
+        }
+    }
+
+    private fun renderRecentProject(
+        value: RecentProjectItem,
+        isSelected: Boolean,
+        cellHasFocus: Boolean
+    ): Component {
         val panel = JPanel(BorderLayout())
-        panel.accessibleContext.accessibleName = value.metadata.name // todo? is it nice enough
+        panel.accessibleContext.accessibleName = value.metadata.name
 
         panel.border = JBUI.Borders.empty(4, 6)
 
@@ -78,6 +93,49 @@ internal class RecentProjectItemRenderer : ListCellRenderer<RecentProjectItem> {
         contentPanel.add(pathComponent)
 
         panel.add(contentPanel, BorderLayout.CENTER)
+
+        // Handle selection colors
+        if (isSelected) {
+            panel.background = UIUtil.getListSelectionBackground(cellHasFocus)
+            panel.foreground = UIUtil.getListSelectionForeground(cellHasFocus)
+        } else {
+            panel.background = UIUtil.getListBackground()
+            panel.foreground = UIUtil.getListForeground()
+        }
+
+        return panel
+    }
+
+    private fun renderOpenFileChooser(
+        isSelected: Boolean,
+        cellHasFocus: Boolean
+    ): Component {
+        val panel = JPanel(BorderLayout())
+        panel.accessibleContext.accessibleName = IdeaJugglerBundle.message("popup.open.file.chooser.label")
+
+        // Add top separator border
+        panel.border = JBUI.Borders.merge(
+            JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.separatorColor(), 1, 0, 0, 0),
+            JBUI.Borders.empty(6, 6, 4, 6),
+            true
+        )
+
+        // Folder icon
+        val iconLabel = JLabel(AllIcons.Nodes.Folder)
+        iconLabel.verticalAlignment = SwingConstants.CENTER
+        iconLabel.border = JBUI.Borders.empty(0, 0, 0, 8)
+        panel.add(iconLabel, BorderLayout.WEST)
+
+        // Label text
+        val textComponent = SimpleColoredComponent()
+        val label = IdeaJugglerBundle.message("popup.open.file.chooser.label")
+        if (isSelected) {
+            textComponent.append(label, SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus)))
+        } else {
+            textComponent.append(label, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+        }
+        textComponent.isOpaque = false
+        panel.add(textComponent, BorderLayout.CENTER)
 
         // Handle selection colors
         if (isSelected) {

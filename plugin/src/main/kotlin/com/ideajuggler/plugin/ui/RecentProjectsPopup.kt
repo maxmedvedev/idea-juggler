@@ -5,11 +5,16 @@ import com.ideajuggler.config.ProjectMetadata
 import com.ideajuggler.config.RecentProjectsIndex
 import com.ideajuggler.plugin.IdeaJugglerBundle
 import com.ideajuggler.plugin.ProjectLauncherHelper
+import com.ideajuggler.plugin.model.OpenFileChooserItem
+import com.ideajuggler.plugin.model.PopupListItem
 import com.ideajuggler.plugin.model.RecentProjectItem
 import com.ideajuggler.util.GitUtils
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
+import com.ideajuggler.core.ProjectManager
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupChooserBuilder
 import com.intellij.ui.components.JBList
@@ -17,6 +22,7 @@ import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import com.intellij.util.concurrency.annotations.RequiresEdt
 import java.nio.file.Files
 import javax.swing.DefaultListModel
+import kotlin.io.path.isDirectory
 
 internal class RecentProjectsPopup(
     private val project: Project?,
@@ -30,29 +36,40 @@ internal class RecentProjectsPopup(
     @RequiresEdt
     private fun createAndShowItems(items: List<RecentProjectItem>) {
         // Create a JBList with custom renderer
-        val listModel = DefaultListModel<RecentProjectItem>()
+        val listModel = DefaultListModel<PopupListItem>()
         items.forEach { listModel.addElement(it) }
 
+        // Add the "Browse..." item at the end
+        listModel.addElement(OpenFileChooserItem)
+
         val list = JBList(listModel)
-        list.cellRenderer = RecentProjectItemRenderer()
+        list.cellRenderer = PopupListItemRenderer()
 
         // Create popup using PopupChooserBuilder
         val popup = PopupChooserBuilder(list)
             .setTitle(IdeaJugglerBundle.message("popup.recent.projects.title"))
             .setItemChosenCallback(Runnable {
-                list.selectedValue?.let { launchProject(it) }
+                list.selectedValue?.let { handleItemSelection(it) }
             })
             .setFilterAlwaysVisible(true)
             .setNamerForFiltering { item ->
-                // Return searchable text: project name, branch, and path
-                buildString {
-                    append(item.metadata.name)
-                    append(" ")
-                    item.gitBranch?.let {
-                        append(it)
-                        append(" ")
+                when (item) {
+                    is RecentProjectItem -> {
+                        // Return searchable text: project name, branch, and path
+                        buildString {
+                            append(item.metadata.name)
+                            append(" ")
+                            item.gitBranch?.let {
+                                append(it)
+                                append(" ")
+                            }
+                            append(item.metadata.path.pathString)
+                        }
                     }
-                    append(item.metadata.path.pathString)
+                    is OpenFileChooserItem -> {
+                        // Always visible by making it searchable
+                        "Browse"
+                    }
                 }
             }
             .createPopup()
@@ -72,15 +89,7 @@ internal class RecentProjectsPopup(
                 Files.exists(metadata.path.path)
             }
 
-            if (validProjects.isEmpty()) {
-                showNotification(
-                    IdeaJugglerBundle.message("notification.recent.projects.empty"),
-                    NotificationType.INFORMATION
-                )
-                return
-            }
-
-            // Create items with git branch info
+            // Create items with git branch info (even if empty, we'll still show the "Browse..." item)
             val items = validProjects.map { metadata ->
                 createRecentProjectItem(metadata)
             }
@@ -121,6 +130,36 @@ internal class RecentProjectsPopup(
             append(" - ")
             append(path)
         }
+    }
+
+    private fun handleItemSelection(item: PopupListItem) {
+        when (item) {
+            is RecentProjectItem -> launchProject(item)
+            is OpenFileChooserItem -> showFileChooserAndLaunch()
+        }
+    }
+
+    private fun showFileChooserAndLaunch() {
+        // Show directory chooser dialog
+        val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor().apply {
+            title = IdeaJugglerBundle.message("file.chooser.title")
+            description = IdeaJugglerBundle.message("file.chooser.description")
+        }
+
+        val selectedFile = FileChooser.chooseFile(descriptor, project, null)
+            ?: return // User cancelled the dialog
+
+        val projectPath = ProjectManager.getInstance(configRepository).resolvePath(selectedFile.path)
+        if (!projectPath.path.isDirectory()) {
+            showNotification(
+                IdeaJugglerBundle.message("notification.error.not.directory", selectedFile.path),
+                NotificationType.ERROR
+            )
+            return
+        }
+
+        // Launch project using shared helper
+        ProjectLauncherHelper.launchProject(project, configRepository, projectPath)
     }
 
     private fun launchProject(item: RecentProjectItem) {
