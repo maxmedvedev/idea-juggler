@@ -26,7 +26,7 @@ else
 fi
 
 # Check Java version (optional but recommended)
-if ! "$JAVA_CMD" -version 2>&1 | grep -q "version \"1[7-9]"; then
+if ! "$JAVA_CMD" -version 2>&1 | grep -qE "version \"(1[7-9]|[2-9][0-9])"; then
     echo "Warning: Java 17 or higher recommended" >&2
 fi
 
