@@ -5,6 +5,8 @@ plugins {
     application
 }
 
+version = "0.0.3"
+
 dependencies {
     implementation(project(":core"))
     testImplementation(kotlin("test"))
@@ -35,6 +37,31 @@ tasks.withType<Jar>().configureEach {
 
 kotlin {
     jvmToolchain(17)
+}
+
+// Generate Version.kt file with version constant
+val generateVersion by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/source/version/kotlin")
+
+    outputs.dir(outputDir)
+
+    doLast {
+        val versionFile = outputDir.get().asFile.resolve("com/ideajuggler/Version.kt")
+        versionFile.parentFile.mkdirs()
+        versionFile.writeText("""
+            package com.ideajuggler
+
+            internal const val CLI_VERSION = "${project.version}"
+        """.trimIndent())
+    }
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir(generateVersion.map { it.outputs.files.singleFile })
+        }
+    }
 }
 
 // Homebrew distribution task

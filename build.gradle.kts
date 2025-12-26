@@ -9,7 +9,6 @@ version = "0.0.3"
 
 subprojects {
     group = rootProject.group
-    version = rootProject.version
 
     repositories {
         mavenCentral()

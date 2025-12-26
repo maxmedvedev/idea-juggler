@@ -4,6 +4,8 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.10.5"
 }
 
+version = "0.0.3"
+
 repositories {
     mavenCentral()
 
@@ -21,6 +23,7 @@ dependencies {
 
 tasks {
     patchPluginXml {
+        pluginVersion.set(project.version.toString())
         sinceBuild.set("253")
         untilBuild.set("261.*")
     }
