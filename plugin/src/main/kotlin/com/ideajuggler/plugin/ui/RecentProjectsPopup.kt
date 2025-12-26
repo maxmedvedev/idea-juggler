@@ -3,9 +3,8 @@ package com.ideajuggler.plugin.ui
 import com.ideajuggler.config.ConfigRepository
 import com.ideajuggler.config.ProjectMetadata
 import com.ideajuggler.config.RecentProjectsIndex
-import com.ideajuggler.core.MessageOutput
-import com.ideajuggler.core.ProjectLauncher
 import com.ideajuggler.plugin.IdeaJugglerBundle
+import com.ideajuggler.plugin.ProjectLauncherHelper
 import com.ideajuggler.plugin.model.RecentProjectItem
 import com.ideajuggler.util.GitUtils
 import com.intellij.notification.NotificationGroupManager
@@ -46,12 +45,10 @@ internal class RecentProjectsPopup(
             }
 
             if (validProjects.isEmpty()) {
-                ApplicationManager.getApplication().invokeLater {
-                    showNotification(
-                        IdeaJugglerBundle.message("notification.recent.projects.empty"),
-                        NotificationType.INFORMATION
-                    )
-                }
+                showNotification(
+                    IdeaJugglerBundle.message("notification.recent.projects.empty"),
+                    NotificationType.INFORMATION
+                )
                 return
             }
 
@@ -99,35 +96,11 @@ internal class RecentProjectsPopup(
     }
 
     private fun launchProject(item: RecentProjectItem) {
-        ApplicationManager.getApplication().executeOnPooledThread {
-            try {
-                val launcher = ProjectLauncher.getInstance(configRepository)
-
-                // Silent message output for plugin context
-                val messageOutput = object : MessageOutput {
-                    override fun echo(message: String) {
-                        // Suppress console output in plugin context
-                    }
-                }
-
-                launcher.launch(messageOutput, item.metadata.path)
-
-                ApplicationManager.getApplication().invokeLater {
-                    showNotification(
-                        IdeaJugglerBundle.message("notification.success.launched", item.metadata.name),
-                        NotificationType.INFORMATION
-                    )
-                }
-            } catch (ex: Exception) {
-                ApplicationManager.getApplication().invokeLater {
-                    showNotification(
-                        IdeaJugglerBundle.message("notification.error.launch.failed", ex.message ?: "Unknown error"),
-                        NotificationType.ERROR
-                    )
-                }
-                ex.printStackTrace()
-            }
-        }
+        ProjectLauncherHelper.launchProject(
+            project,
+            configRepository,
+            item.metadata.path,
+        )
     }
 
     private fun showNotification(message: String, type: NotificationType) {
