@@ -12,6 +12,7 @@ import java.awt.BorderLayout
 import java.awt.Component
 import java.io.File
 import javax.swing.BoxLayout
+import javax.swing.Icon
 import javax.swing.JLabel
 import javax.swing.JList
 import javax.swing.JPanel
@@ -125,53 +126,34 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         isSelected: Boolean,
         cellHasFocus: Boolean
     ): Component {
-        val panel = JPanel(BorderLayout())
-        panel.accessibleContext.accessibleName = ProjectJugglerBundle.message("popup.open.file.chooser.label")
-
-        // Add top separator border
-        panel.border = JBUI.Borders.merge(
-            JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.separatorColor(), 1, 0, 0, 0),
-            JBUI.Borders.empty(6, 6, 4, 6),
-            true
+        return renderActionItem(
+            label = ProjectJugglerBundle.message("popup.open.file.chooser.label"),
+            icon = AllIcons.Nodes.Folder,
+            isSelected = isSelected,
+            cellHasFocus = cellHasFocus
         )
-
-        // Folder icon
-        val iconLabel = JLabel(AllIcons.Nodes.Folder)
-        iconLabel.verticalAlignment = SwingConstants.CENTER
-        iconLabel.border = JBUI.Borders.empty(0, 0, 0, 8)
-        panel.add(iconLabel, BorderLayout.WEST)
-
-        // Label text
-        val textComponent = SimpleColoredComponent()
-        val label = ProjectJugglerBundle.message("popup.open.file.chooser.label")
-        if (isSelected) {
-            textComponent.append(label,
-                SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus))
-            )
-        } else {
-            textComponent.append(label, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-        }
-        textComponent.isOpaque = false
-        panel.add(textComponent, BorderLayout.CENTER)
-
-        // Handle selection colors
-        if (isSelected) {
-            panel.background = UIUtil.getListSelectionBackground(cellHasFocus)
-            panel.foreground = UIUtil.getListSelectionForeground(cellHasFocus)
-        } else {
-            panel.background = UIUtil.getListBackground()
-            panel.foreground = UIUtil.getListForeground()
-        }
-
-        return panel
     }
 
     private fun renderSyncAllProjects(
         isSelected: Boolean,
         cellHasFocus: Boolean
     ): Component {
+        return renderActionItem(
+            label = "Sync all projects",
+            icon = AllIcons.Actions.Refresh,
+            isSelected = isSelected,
+            cellHasFocus = cellHasFocus
+        )
+    }
+
+    private fun renderActionItem(
+        label: String,
+        icon: Icon,
+        isSelected: Boolean,
+        cellHasFocus: Boolean
+    ): Component {
         val panel = JPanel(BorderLayout())
-        panel.accessibleContext.accessibleName = "Sync all projects"
+        panel.accessibleContext.accessibleName = label
 
         // Add top separator border
         panel.border = JBUI.Borders.merge(
@@ -180,15 +162,14 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
             true
         )
 
-        // Refresh/sync icon
-        val iconLabel = JLabel(AllIcons.Actions.Refresh)
+        // Icon
+        val iconLabel = JLabel(icon)
         iconLabel.verticalAlignment = SwingConstants.CENTER
         iconLabel.border = JBUI.Borders.empty(0, 0, 0, 8)
         panel.add(iconLabel, BorderLayout.WEST)
 
         // Label text
         val textComponent = SimpleColoredComponent()
-        val label = "Sync all projects"
         if (isSelected) {
             textComponent.append(label,
                 SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus))
