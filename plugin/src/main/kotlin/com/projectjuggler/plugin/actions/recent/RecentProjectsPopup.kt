@@ -162,14 +162,19 @@ private class RecentProjectPopupStep(
         ) {
             override fun run(p0: ProgressIndicator) {
                 try {
+                    p0.isIndeterminate = false
                     val allProjects = configRepository.loadAllProjects()
-                    allProjects.forEach { projectMetadata ->
-                        ProjectLauncher(configRepository).syncProject(
-                            projectMetadata,
-                            syncVmOptions = true,
-                            syncConfig = true,
-                            syncPlugins = true
-                        )
+                    allProjects.forEachIndexed { index, projectMetadata ->
+                        p0.text = ProjectJugglerBundle.message("progress.sync.project.settings", projectMetadata.path.name)
+
+                        p0.fraction = index.toDouble() / allProjects.size
+                        ProjectLauncher(configRepository).syncProject(projectMetadata, syncVmOptions = true, syncConfig = false, syncPlugins = false)
+
+                        p0.fraction = (3 * index.toDouble() +  1) / (allProjects.size * 3)
+                        ProjectLauncher(configRepository).syncProject(projectMetadata, syncVmOptions = false, syncConfig = true, syncPlugins = false)
+
+                        p0.fraction = (3* index.toDouble() + 2) / (allProjects.size * 3)
+                        ProjectLauncher(configRepository).syncProject(projectMetadata, syncVmOptions = false, syncConfig = false, syncPlugins = true)
                     }
                     showInfoNotification(
                         ProjectJugglerBundle.message("notification.success.sync.all.projects", allProjects.size),
@@ -182,6 +187,8 @@ private class RecentProjectPopupStep(
                     )
                 }
             }
+
+
         })
     }
 
