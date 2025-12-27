@@ -54,7 +54,7 @@ internal class RecentProjectsPopup(
 
             // Show popup on EDT
             application.invokeLater {
-                val popupStep = RecentProjectPopupStep(items, project, configRepository)
+                val popupStep = RecentProjectPopupStep(itemsList, project, configRepository)
                 val popup = RecentProjectPopup(popupStep, project)
                 popup.showInFocusCenter()
             }
