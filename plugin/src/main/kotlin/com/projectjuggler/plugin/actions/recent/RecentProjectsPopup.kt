@@ -3,6 +3,9 @@ package com.projectjuggler.plugin.actions.recent
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
@@ -148,26 +151,28 @@ private class RecentProjectPopupStep(
     }
 
     private fun syncAllProjects() {
-        application.executeOnPooledThread {
-            try {
-                val allProjects = configRepository.loadAllProjects()
-                allProjects.forEach { projectMetadata ->
-                    ProjectLauncher(configRepository).syncProject(
-                        projectMetadata,
-                        syncVmOptions = true,
-                        syncConfig = true,
-                        syncPlugins = true
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing settings for all projects...") {
+            override fun run(p0: ProgressIndicator) {
+                try {
+                    val allProjects = configRepository.loadAllProjects()
+                    allProjects.forEach { projectMetadata ->
+                        ProjectLauncher(configRepository).syncProject(
+                            projectMetadata,
+                            syncVmOptions = true,
+                            syncConfig = true,
+                            syncPlugins = true
+                        )
+                    }
+                    showNotification(
+                        "Synced ${allProjects.size} projects successfully",
+                        project,
+                        NotificationType.INFORMATION
                     )
+                } catch (e: Exception) {
+                    showNotification("Failed to sync projects: ${e.message}", project, NotificationType.ERROR)
                 }
-                showNotification(
-                    "Synced ${allProjects.size} projects successfully",
-                    project,
-                    NotificationType.INFORMATION
-                )
-            } catch (e: Exception) {
-                showNotification("Failed to sync projects: ${e.message}", project, NotificationType.ERROR)
             }
-        }
+        })
     }
 
     private fun showFileChooserAndLaunch() {
@@ -192,24 +197,17 @@ private class RecentProjectPopupStep(
     }
 
     private fun syncProjectSettings(projectPath: ProjectPath) {
-        application.executeOnPooledThread {
-            val metadata = ProjectManager.getInstance(configRepository).get(projectPath) ?: return@executeOnPooledThread
-            try {
-                ProjectLauncher(configRepository).syncProject(
-                    metadata,
-                    syncVmOptions = true,
-                    syncConfig = true,
-                    syncPlugins = true
-                )
-                showNotification(
-                    "Settings synced successfully for ${metadata.path.name}",
-                    project,
-                    NotificationType.INFORMATION
-                )
-            } catch (e: Exception) {
-                showNotification("Failed to sync settings: ${e.message}", project, NotificationType.ERROR)
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing settings for ${projectPath.name}...") {
+            override fun run(p0: ProgressIndicator) {
+                val metadata = ProjectManager.getInstance(configRepository).get(projectPath) ?: return
+                try {
+                    ProjectLauncher(configRepository).syncProject(metadata, true, true, true)
+                    showNotification("Settings synced successfully for ${metadata.path.name}", project, NotificationType.INFORMATION)
+                } catch (e: Exception) {
+                    showNotification("Failed to sync settings: ${e.message}", project, NotificationType.ERROR)
+                }
             }
-        }
+        })
     }
 
     override fun hasSubstep(selectedValue: PopupListItem): Boolean =
@@ -237,7 +235,6 @@ private class RecentProjectPopupStep(
             append(path)
         }
     }
-
 
     override fun isSpeedSearchEnabled(): Boolean = true
 
