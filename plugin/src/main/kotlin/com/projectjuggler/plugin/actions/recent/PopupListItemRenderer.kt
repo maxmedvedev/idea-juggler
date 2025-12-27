@@ -110,14 +110,7 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
 
         panel.add(contentPanel, BorderLayout.CENTER)
 
-        // Handle selection colors
-        if (isSelected) {
-            panel.background = UIUtil.getListSelectionBackground(cellHasFocus)
-            panel.foreground = UIUtil.getListSelectionForeground(cellHasFocus)
-        } else {
-            panel.background = UIUtil.getListBackground()
-            panel.foreground = UIUtil.getListForeground()
-        }
+        applySelectionColors(panel, isSelected, cellHasFocus)
 
         return panel
     }
@@ -180,7 +173,12 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         textComponent.isOpaque = false
         panel.add(textComponent, BorderLayout.CENTER)
 
-        // Handle selection colors
+        applySelectionColors(panel, isSelected, cellHasFocus)
+
+        return panel
+    }
+
+    private fun applySelectionColors(panel: JPanel, isSelected: Boolean, cellHasFocus: Boolean) {
         if (isSelected) {
             panel.background = UIUtil.getListSelectionBackground(cellHasFocus)
             panel.foreground = UIUtil.getListSelectionForeground(cellHasFocus)
@@ -188,8 +186,6 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
             panel.background = UIUtil.getListBackground()
             panel.foreground = UIUtil.getListForeground()
         }
-
-        return panel
     }
 
     private fun compactPath(path: String): String {
