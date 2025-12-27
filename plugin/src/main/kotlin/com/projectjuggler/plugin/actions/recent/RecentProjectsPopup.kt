@@ -1,6 +1,5 @@
 package com.projectjuggler.plugin.actions.recent
 
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.progress.ProgressIndicator
@@ -22,7 +21,8 @@ import com.projectjuggler.core.ProjectLauncher
 import com.projectjuggler.core.ProjectManager
 import com.projectjuggler.plugin.ProjectJugglerBundle
 import com.projectjuggler.plugin.ProjectLauncherHelper
-import com.projectjuggler.plugin.showNotification
+import com.projectjuggler.plugin.showErrorNotification
+import com.projectjuggler.plugin.showInfoNotification
 import com.projectjuggler.util.GitUtils
 import java.awt.Component
 import java.nio.file.Files.exists
@@ -67,10 +67,9 @@ internal class RecentProjectsPopup(
                 popup.showInFocusCenter()
             }
         } catch (ex: Exception) {
-            showNotification(
+            showErrorNotification(
                 ProjectJugglerBundle.message("notification.error.recent.projects.load.failed", ex.message ?: ""),
-                project,
-                NotificationType.ERROR
+                project
             )
             ex.printStackTrace()
         }
@@ -172,16 +171,14 @@ private class RecentProjectPopupStep(
                             syncPlugins = true
                         )
                     }
-                    showNotification(
+                    showInfoNotification(
                         ProjectJugglerBundle.message("notification.success.sync.all.projects", allProjects.size),
-                        project,
-                        NotificationType.INFORMATION
+                        project
                     )
                 } catch (e: Exception) {
-                    showNotification(
+                    showErrorNotification(
                         ProjectJugglerBundle.message("notification.error.sync.projects.failed", e.message ?: ""),
-                        project,
-                        NotificationType.ERROR
+                        project
                     )
                 }
             }
@@ -198,10 +195,9 @@ private class RecentProjectPopupStep(
 
         val projectPath = ProjectManager.getInstance(configRepository).resolvePath(selectedFile.path)
         if (!projectPath.path.isDirectory()) {
-            showNotification(
+            showErrorNotification(
                 ProjectJugglerBundle.message("notification.error.not.directory", selectedFile.path),
-                project,
-                NotificationType.ERROR
+                project
             )
             return
         }
@@ -218,16 +214,14 @@ private class RecentProjectPopupStep(
                 val metadata = ProjectManager.getInstance(configRepository).get(projectPath) ?: return
                 try {
                     ProjectLauncher(configRepository).syncProject(metadata, true, true, true)
-                    showNotification(
+                    showInfoNotification(
                         ProjectJugglerBundle.message("notification.success.sync.project.settings", metadata.path.name),
-                        project,
-                        NotificationType.INFORMATION
+                        project
                     )
                 } catch (e: Exception) {
-                    showNotification(
+                    showErrorNotification(
                         ProjectJugglerBundle.message("notification.error.sync.settings.failed", e.message ?: ""),
-                        project,
-                        NotificationType.ERROR
+                        project
                     )
                 }
             }
