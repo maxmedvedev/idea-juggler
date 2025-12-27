@@ -1,5 +1,8 @@
 package com.projectjuggler.plugin
 
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
 import com.projectjuggler.config.ConfigRepository
 import com.projectjuggler.config.ProjectPath
 import com.projectjuggler.core.MessageOutput
@@ -20,25 +23,37 @@ internal object ProjectLauncherHelper {
         configRepository: ConfigRepository,
         projectPath: ProjectPath,
     ) {
-        application.executeOnPooledThread {
-            try {
-                val launcher = ProjectLauncher.getInstance(configRepository)
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Launching ${projectPath.name}...") {
+            override fun run(indicator: ProgressIndicator) {
+                try {
+                    val launcher = ProjectLauncher.getInstance(configRepository)
 
-                // Silent message output for plugin context
-                val messageOutput = object : MessageOutput {
-                    override fun echo(message: String) {
-                        // Suppress console output in plugin context
-                        // Notifications are handled separately
+                    // Silent message output for plugin context
+                    val messageOutput = object : MessageOutput {
+                        override fun echo(message: String) {
+                            // Suppress console output in plugin context
+                            // Notifications are handled separately
+                        }
                     }
+
+                    launcher.launch(messageOutput, projectPath)
+
+                    showInfoNotification(
+                        ProjectJugglerBundle.message(
+                            "notification.success.launched",
+                            projectPath.name
+                        ), project
+                    )
+                } catch (ex: Exception) {
+                    showErrorNotification(
+                        ProjectJugglerBundle.message(
+                            "notification.error.launch.failed",
+                            ex.message ?: "Unknown error"
+                        ), project
+                    )
+                    ex.printStackTrace()
                 }
-
-                launcher.launch(messageOutput, projectPath)
-
-                showInfoNotification(ProjectJugglerBundle.message("notification.success.launched", projectPath.name), project)
-            } catch (ex: Exception) {
-                showErrorNotification(ProjectJugglerBundle.message("notification.error.launch.failed", ex.message ?: "Unknown error"), project)
-                ex.printStackTrace()
             }
-        }
+        })
     }
 }

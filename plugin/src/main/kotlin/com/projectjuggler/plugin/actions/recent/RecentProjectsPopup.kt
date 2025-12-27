@@ -52,7 +52,7 @@ internal class RecentProjectsPopup(
             val itemsList = mutableListOf<PopupListItem>()
 
             // Add main project at the top if configured
-            itemsList.addIfNotNull(prepareMainProjectItem(configRepository))
+            itemsList.addIfNotNull(createMainProjectItem(configRepository))
             itemsList.addAll(items)
             itemsList.add(OpenFileChooserItem)
             itemsList.add(SyncAllProjectsItem)
@@ -69,39 +69,22 @@ internal class RecentProjectsPopup(
         }
     }
 
-    private fun prepareMainProjectItem(configRepository: ConfigRepository): MainProjectItem? {
+    private fun createMainProjectItem(configRepository: ConfigRepository): RecentProjectItem? {
         val mainProjectPathStr = configRepository.load().mainProjectPath ?: return null
         val path = ProjectPath(mainProjectPathStr)
         val gitBranch = GitUtils.detectGitBranch(path.path)
-        return MainProjectItem(path, gitBranch)
+        return RecentProjectItem(path, gitBranch)
     }
 
     private fun createRecentProjectItem(metadata: ProjectMetadata): RecentProjectItem {
         val gitBranch = GitUtils.detectGitBranch(metadata.path.path)
-        val displayText = formatDisplayText(metadata, gitBranch)
-        return RecentProjectItem(metadata, gitBranch, displayText)
-    }
-
-    private fun formatDisplayText(metadata: ProjectMetadata, gitBranch: String?): String {
-        val name = metadata.name
-        val path = metadata.path.pathString
-
-        // Format: "ProjectName - [branch] - /path/to/project"
-        return buildString {
-            append(name)
-            if (gitBranch != null) {
-                append(" - [")
-                append(gitBranch)
-                append("]")
-            }
-            append(" - ")
-            append(path)
-        }
+        return RecentProjectItem(metadata.path, gitBranch)
     }
 }
 
 @Suppress("jol")
-private class RecentProjectPopup(popupStep: BaseListPopupStep<PopupListItem>, project: Project?) : ListPopupImpl(project, popupStep) {
+private class RecentProjectPopup(popupStep: BaseListPopupStep<PopupListItem>, project: Project?) :
+    ListPopupImpl(project, popupStep) {
     override fun getListElementRenderer(): PopupListElementRenderer<*> {
         @Suppress("UNCHECKED_CAST")
         return ProjectItemRenderer(this) as PopupListElementRenderer<*>
@@ -146,8 +129,8 @@ private class RecentProjectPopupStep(
                 if (!finalChoice) return FINAL_CHOICE
 
                 when (selectedValue) {
-                    "Open Project" -> launchProject(item, project, configRepository)
-                    "Sync All Settings" -> syncProjectSettings(item.metadata)
+                    "Open Project" -> ProjectLauncherHelper.launchProject(project, configRepository, item.projectPath)
+                    "Sync All Settings" -> syncProjectSettings(item.projectPath)
                 }
                 return FINAL_CHOICE
             }
@@ -158,19 +141,10 @@ private class RecentProjectPopupStep(
 
     private fun handleItemSelection(item: PopupListItem) {
         when (item) {
-            is MainProjectItem -> launchMainProject(item)
-            is RecentProjectItem -> launchProject(item, project, configRepository)
+            is RecentProjectItem -> ProjectLauncherHelper.launchProject(project, configRepository, item.projectPath)
             is OpenFileChooserItem -> showFileChooserAndLaunch()
             is SyncAllProjectsItem -> syncAllProjects()
         }
-    }
-
-    private fun launchMainProject(item: MainProjectItem) {
-        ProjectLauncherHelper.launchProject(
-            project,
-            configRepository,
-            item.path
-        )
     }
 
     private fun syncAllProjects() {
@@ -185,7 +159,11 @@ private class RecentProjectPopupStep(
                         syncPlugins = true
                     )
                 }
-                showNotification("Synced ${allProjects.size} projects successfully", project, NotificationType.INFORMATION)
+                showNotification(
+                    "Synced ${allProjects.size} projects successfully",
+                    project,
+                    NotificationType.INFORMATION
+                )
             } catch (e: Exception) {
                 showNotification("Failed to sync projects: ${e.message}", project, NotificationType.ERROR)
             }
@@ -202,18 +180,32 @@ private class RecentProjectPopupStep(
 
         val projectPath = ProjectManager.getInstance(configRepository).resolvePath(selectedFile.path)
         if (!projectPath.path.isDirectory()) {
-            showNotification(ProjectJugglerBundle.message("notification.error.not.directory", selectedFile.path), project, NotificationType.ERROR)
+            showNotification(
+                ProjectJugglerBundle.message("notification.error.not.directory", selectedFile.path),
+                project,
+                NotificationType.ERROR
+            )
             return
         }
 
         ProjectLauncherHelper.launchProject(project, configRepository, projectPath)
     }
 
-    private fun syncProjectSettings(metadata: ProjectMetadata) {
+    private fun syncProjectSettings(projectPath: ProjectPath) {
         application.executeOnPooledThread {
+            val metadata = ProjectManager.getInstance(configRepository).get(projectPath) ?: return@executeOnPooledThread
             try {
-                ProjectLauncher(configRepository).syncProject(metadata, syncVmOptions = true, syncConfig = true, syncPlugins = true)
-                showNotification("Settings synced successfully for ${metadata.path.name}", project, NotificationType.INFORMATION)
+                ProjectLauncher(configRepository).syncProject(
+                    metadata,
+                    syncVmOptions = true,
+                    syncConfig = true,
+                    syncPlugins = true
+                )
+                showNotification(
+                    "Settings synced successfully for ${metadata.path.name}",
+                    project,
+                    NotificationType.INFORMATION
+                )
             } catch (e: Exception) {
                 showNotification("Failed to sync settings: ${e.message}", project, NotificationType.ERROR)
             }
@@ -221,43 +213,51 @@ private class RecentProjectPopupStep(
     }
 
     override fun hasSubstep(selectedValue: PopupListItem): Boolean =
-        selectedValue is RecentProjectItem || selectedValue is MainProjectItem
+        selectedValue is RecentProjectItem
 
     override fun getTextFor(value: PopupListItem): String = when (value) {
-        is MainProjectItem -> value.path.name
-        is RecentProjectItem -> value.displayText
+        is RecentProjectItem -> formatDisplayText(value.projectPath, value.gitBranch)
         is OpenFileChooserItem -> ProjectJugglerBundle.message("popup.open.file.chooser.label")
         is SyncAllProjectsItem -> "Sync all projects"
     }
+
+    private fun formatDisplayText(projectPath: ProjectPath, gitBranch: String?): String {
+        val name = projectPath.name
+        val path = projectPath.pathString
+
+        // Format: "ProjectName - [branch] - /path/to/project"
+        return buildString {
+            append(name)
+            if (gitBranch != null) {
+                append(" - [")
+                append(gitBranch)
+                append("]")
+            }
+            append(" - ")
+            append(path)
+        }
+    }
+
 
     override fun isSpeedSearchEnabled(): Boolean = true
 
     override fun getIndexedString(value: PopupListItem): String {
         return when (value) {
-            is MainProjectItem -> buildProjectSearchString(value.path, value.gitBranch)
-            is RecentProjectItem -> buildProjectSearchString(value.metadata.path, value.gitBranch)
+            is RecentProjectItem -> buildProjectSearchString(value.projectPath, value.gitBranch)
             is OpenFileChooserItem -> "Browse"
             is SyncAllProjectsItem -> "Sync all projects"
         }
     }
 
-    private fun buildProjectSearchString(path: ProjectPath, gitBranch: String?): String {
+    private fun buildProjectSearchString(projectPath: ProjectPath, gitBranch: String?): String {
         return buildString {
-            append(path.name)
+            append(projectPath.name)
             append(" ")
             gitBranch?.let {
                 append(it)
                 append(" ")
             }
-            append(path.pathString)
+            append(projectPath.pathString)
         }
     }
-}
-
-private fun launchProject(item: RecentProjectItem, project: Project?, configRepository: ConfigRepository) {
-    ProjectLauncherHelper.launchProject(
-        project,
-        configRepository,
-        item.metadata.path,
-    )
 }
