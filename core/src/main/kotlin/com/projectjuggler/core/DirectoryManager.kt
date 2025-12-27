@@ -101,7 +101,7 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
             "Base config path not found. Either configure it using 'project-juggler config --base-config <path>' or ensure IntelliJ is installed with default paths."
         )
         val projectDirs = ensureProjectDirectories(project)
-        DirectoryCopier.copy(baseConfigPath, projectDirs.config)
+        DirectoryCopier.copy(baseConfigPath, projectDirs.config, EXCLUDED_DIRECTORIES, EXCLUDED_FILES, EXCLUDED_PATTERNS)
     }
 
     /**

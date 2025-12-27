@@ -50,13 +50,19 @@ object DirectoryCopier {
      * @param source Source directory
      * @param destination Destination directory
      */
-    fun copy(source: Path, destination: Path) {
+    fun copy(
+        source: Path,
+        destination: Path,
+        excludedDirectories: Set<String> = emptySet(),
+        excludedFiles: Set<String> = emptySet(),
+        excludedPatterns: Set<String> = emptySet(),
+    ) {
         // Check if source exists and is readable
         if (!source.exists() || !source.isDirectory()) {
             throw IllegalArgumentException("Source directory does not exist or is not a directory: $source")
         }
 
-        copyDirectoryRecursively(source, destination)
+        copyDirectoryRecursively(source, destination, excludedDirectories, excludedFiles, excludedPatterns)
     }
 
     /**
