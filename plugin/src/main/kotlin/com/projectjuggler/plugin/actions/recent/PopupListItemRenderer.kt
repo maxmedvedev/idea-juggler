@@ -134,32 +134,32 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         isSelected: Boolean,
         cellHasFocus: Boolean
     ): Component {
-        val panel = JPanel(BorderLayout())
-        panel.accessibleContext.accessibleName = label
+        val outerPanel = JPanel(BorderLayout())
+        outerPanel.isOpaque = false
+        outerPanel.border = JBUI.Borders.customLineTop(JBUI.CurrentTheme.Popup.separatorColor())
 
-        // Add top separator border
-        panel.border = JBUI.Borders.merge(
-            JBUI.Borders.customLine(JBUI.CurrentTheme.Popup.separatorColor(), 1, 0, 0, 0),
-            JBUI.Borders.empty(6, 6, 4, 6),
-            true
-        )
+        val contentPanel = JPanel(BorderLayout())
+        contentPanel.accessibleContext.accessibleName = label
+        contentPanel.border = JBUI.Borders.empty(6, 6, 4, 6)
 
         // Icon
         val iconLabel = JLabel(icon)
         iconLabel.verticalAlignment = SwingConstants.CENTER
         iconLabel.border = JBUI.Borders.emptyRight(8)
-        panel.add(iconLabel, BorderLayout.WEST)
+        contentPanel.add(iconLabel, BorderLayout.WEST)
 
         // Label text
         val attributes = getRegularTextAttributes(isSelected, cellHasFocus)
         val textComponent = SimpleColoredComponent()
         textComponent.append(label, attributes)
         textComponent.isOpaque = false
-        panel.add(textComponent, BorderLayout.CENTER)
+        contentPanel.add(textComponent, BorderLayout.CENTER)
 
-        applySelectionColors(panel, isSelected, cellHasFocus)
+        applySelectionColors(contentPanel, isSelected, cellHasFocus)
 
-        return panel
+        outerPanel.add(contentPanel, BorderLayout.CENTER)
+
+        return outerPanel
     }
 
     private fun getRegularTextAttributes(
