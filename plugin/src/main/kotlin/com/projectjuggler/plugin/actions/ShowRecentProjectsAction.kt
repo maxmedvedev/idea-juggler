@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.intellij.util.application
-import com.projectjuggler.plugin.ui.RecentProjectsPopup
+import com.projectjuggler.plugin.actions.recent.RecentProjectsPopup
 
 internal class ShowRecentProjectsAction : AnAction() {
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT

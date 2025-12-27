@@ -1,4 +1,4 @@
-package com.projectjuggler.plugin.model
+package com.projectjuggler.plugin.actions.recent
 
 import com.projectjuggler.config.ProjectMetadata
 

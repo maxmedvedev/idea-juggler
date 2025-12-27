@@ -1,4 +1,4 @@
-package com.projectjuggler.plugin.ui
+package com.projectjuggler.plugin.actions.recent
 
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
@@ -18,10 +18,6 @@ import com.projectjuggler.core.ProjectLauncher
 import com.projectjuggler.core.ProjectManager
 import com.projectjuggler.plugin.ProjectJugglerBundle
 import com.projectjuggler.plugin.ProjectLauncherHelper
-import com.projectjuggler.plugin.model.OpenFileChooserItem
-import com.projectjuggler.plugin.model.PopupListItem
-import com.projectjuggler.plugin.model.RecentProjectItem
-import com.projectjuggler.plugin.model.SyncAllProjectsItem
 import com.projectjuggler.util.GitUtils
 import java.awt.Component
 import java.nio.file.Files.exists

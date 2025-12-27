@@ -1,10 +1,5 @@
-package com.projectjuggler.plugin.ui
+package com.projectjuggler.plugin.actions.recent
 
-import com.projectjuggler.plugin.ProjectJugglerBundle
-import com.projectjuggler.plugin.model.OpenFileChooserItem
-import com.projectjuggler.plugin.model.PopupListItem
-import com.projectjuggler.plugin.model.RecentProjectItem
-import com.projectjuggler.plugin.model.SyncAllProjectsItem
 import com.intellij.icons.AllIcons
 import com.intellij.ide.RecentProjectsManager
 import com.intellij.ide.RecentProjectsManagerBase
@@ -12,10 +7,16 @@ import com.intellij.ui.SimpleColoredComponent
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import com.projectjuggler.plugin.ProjectJugglerBundle
 import java.awt.BorderLayout
 import java.awt.Component
 import java.io.File
-import javax.swing.*
+import javax.swing.BoxLayout
+import javax.swing.JLabel
+import javax.swing.JList
+import javax.swing.JPanel
+import javax.swing.ListCellRenderer
+import javax.swing.SwingConstants
 
 internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
     private val recentProjectsManager = RecentProjectsManager.getInstance() as RecentProjectsManagerBase
@@ -63,7 +64,9 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         // First line: Project name
         val nameComponent = SimpleColoredComponent()
         if (isSelected) {
-            nameComponent.append(value.metadata.name, SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus)))
+            nameComponent.append(value.metadata.name,
+                SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus))
+            )
         } else {
             nameComponent.append(value.metadata.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
         }
@@ -74,7 +77,12 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         if (value.gitBranch != null) {
             val branchComponent = SimpleColoredComponent()
             if (isSelected) {
-                branchComponent.append("[${value.gitBranch}]", SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus)))
+                branchComponent.append("[${value.gitBranch}]",
+                    SimpleTextAttributes(
+                        SimpleTextAttributes.STYLE_PLAIN,
+                        UIUtil.getListSelectionForeground(cellHasFocus)
+                    )
+                )
             } else {
                 branchComponent.append("[${value.gitBranch}]", SimpleTextAttributes.GRAYED_ATTRIBUTES)
             }
@@ -87,7 +95,12 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         val compactPath = compactPath(path)
         val pathComponent = SimpleColoredComponent()
         if (isSelected) {
-            pathComponent.append(compactPath, SimpleTextAttributes(SimpleTextAttributes.STYLE_SMALLER, UIUtil.getListSelectionForeground(cellHasFocus)))
+            pathComponent.append(compactPath,
+                SimpleTextAttributes(
+                    SimpleTextAttributes.STYLE_SMALLER,
+                    UIUtil.getListSelectionForeground(cellHasFocus)
+                )
+            )
         } else {
             pathComponent.append(compactPath, SimpleTextAttributes.GRAYED_SMALL_ATTRIBUTES)
         }
@@ -132,7 +145,9 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         val textComponent = SimpleColoredComponent()
         val label = ProjectJugglerBundle.message("popup.open.file.chooser.label")
         if (isSelected) {
-            textComponent.append(label, SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus)))
+            textComponent.append(label,
+                SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus))
+            )
         } else {
             textComponent.append(label, SimpleTextAttributes.REGULAR_ATTRIBUTES)
         }
@@ -175,7 +190,9 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         val textComponent = SimpleColoredComponent()
         val label = "Sync all projects"
         if (isSelected) {
-            textComponent.append(label, SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus)))
+            textComponent.append(label,
+                SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, UIUtil.getListSelectionForeground(cellHasFocus))
+            )
         } else {
             textComponent.append(label, SimpleTextAttributes.REGULAR_ATTRIBUTES)
         }
