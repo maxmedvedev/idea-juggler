@@ -121,7 +121,8 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
             label = ProjectJugglerBundle.message("popup.open.file.chooser.label"),
             icon = AllIcons.Nodes.Folder,
             isSelected = isSelected,
-            cellHasFocus = cellHasFocus
+            cellHasFocus = cellHasFocus,
+            showSeparator = true
         )
     }
 
@@ -136,11 +137,14 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
             SyncType.Config -> ProjectJugglerBundle.message("popup.sync.config.label")
             SyncType.Plugins -> ProjectJugglerBundle.message("popup.sync.plugins.label")
         }
+        // Only show separator before the first sync action (All)
+        val showSeparator = syncType is SyncType.All
         return renderActionItem(
             label = label,
             icon = AllIcons.Actions.Refresh,
             isSelected = isSelected,
-            cellHasFocus = cellHasFocus
+            cellHasFocus = cellHasFocus,
+            showSeparator = showSeparator
         )
     }
 
@@ -148,11 +152,14 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
         label: String,
         icon: Icon,
         isSelected: Boolean,
-        cellHasFocus: Boolean
+        cellHasFocus: Boolean,
+        showSeparator: Boolean = true
     ): Component {
         val outerPanel = JPanel(BorderLayout())
         outerPanel.isOpaque = false
-        outerPanel.border = JBUI.Borders.customLineTop(JBUI.CurrentTheme.Popup.separatorColor())
+        if (showSeparator) {
+            outerPanel.border = JBUI.Borders.customLineTop(JBUI.CurrentTheme.Popup.separatorColor())
+        }
 
         val contentPanel = JPanel(BorderLayout())
         contentPanel.accessibleContext.accessibleName = label
