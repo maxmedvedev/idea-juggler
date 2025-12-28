@@ -122,7 +122,7 @@ internal class PopupListItemRenderer : ListCellRenderer<PopupListItem> {
             icon = AllIcons.Nodes.Folder,
             isSelected = isSelected,
             cellHasFocus = cellHasFocus,
-            showSeparator = true
+            showSeparator = false
         )
     }
 

@@ -55,10 +55,11 @@ internal class RecentProjectsPopup(
             // Create popup using ListPopupImpl with custom renderer and submenu support
             val itemsList = mutableListOf<PopupListItem>()
 
-            // Add main project at the top if configured
+            // Add browse button at the top
+            itemsList.add(OpenFileChooserItem)
+            // Add main project if configured
             itemsList.addIfNotNull(createMainProjectItem(configRepository))
             itemsList.addAll(items)
-            itemsList.add(OpenFileChooserItem)
             itemsList.add(SyncProjectsItem(SyncType.All))
             itemsList.add(SyncProjectsItem(SyncType.VmOptions))
             itemsList.add(SyncProjectsItem(SyncType.Config))
