@@ -2,6 +2,7 @@ package com.projectjuggler.core
 
 import com.projectjuggler.config.ConfigRepository
 import com.projectjuggler.config.ProjectMetadata
+import com.projectjuggler.config.ProjectPath
 import com.projectjuggler.platform.ConfigLocator
 import com.projectjuggler.platform.PluginLocator
 import com.projectjuggler.util.DirectoryCopier
@@ -123,6 +124,10 @@ class DirectoryManager(private val configRepository: ConfigRepository) {
     }
 
     fun getProjectRoot(project: ProjectMetadata): Path {
+        return getProjectRoot(project.path)
+    }
+
+    fun getProjectRoot(project: ProjectPath): Path {
         return configRepository.baseDir.resolve("projects").resolve(project.id.id)
     }
 
