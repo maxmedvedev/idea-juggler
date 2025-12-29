@@ -342,6 +342,7 @@ private class RecentProjectPopupStep(
                     )
 
                     projects.forEachIndexed { index, projectMetadata ->
+                        ProgressManager.checkCanceled()
                         indicator.text = ProjectJugglerBundle.message(
                             "progress.sync.project.type",
                             syncType.displayName,
